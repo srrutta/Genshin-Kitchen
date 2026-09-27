@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Genshin Kitchen — ระบบสั่งอาหาร</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>TEYVAT KITCHEN</h1>
+  <p>เติมพลังให้เต็ม! ก่อนออกเดินทางสู่แดนถัดไป</p>
+</header>
+
+<section class="search-block" aria-label="ค้นหาร้านอาหารตามเมือง">
+  <div class="field floating-field">
+    <select id="userNationSelect" aria-label="เมือง" onchange="onSearchFieldChange()">
+      <option value="" selected hidden>เมือง</option>
+    </select>
+  </div>
+  <div class="field floating-field uid-field">
+    <input id="uidLastFour" type="text" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="UID · 4 ตัวท้าย" aria-label="UID 4 ตัวท้าย" oninput="sanitizeUidInput(this)">
+  </div>
+  <button class="btn search-go-btn" id="searchGoBtn" onclick="searchNearbyRestaurants()" disabled>ค้นหา</button>
+</section>
+
+<section class="recommended-block" id="recommendedBlock" hidden>
+  <h2>แนะนำร้านอาหารใกล้คุณ</h2>
+  <div id="recommendedList"></div>
+</section>
+
+<nav class="workspace-nav" aria-label="พื้นที่การทำงาน">
+  <button type="button" class="workspace-btn active" id="menuWorkspaceBtn" aria-pressed="true" onclick="showWorkspace('menu')">เมนูอาหาร</button>
+  <button type="button" class="workspace-btn" id="ordersWorkspaceBtn" aria-pressed="false" onclick="showWorkspace('orders')">คิวอาหารและประวัติ <span class="workspace-badge" id="queueBadge">0</span></button>
+</nav>
+
+<div id="menuWorkspace">
+<nav class="view-nav" id="viewNav" aria-label="มุมมองเมนู"></nav>
+<nav class="nations" id="nationsNav" aria-label="เมือง"></nav>
+
+<div class="layout">
+  <section>
+    <div id="menuArea"><div class="loading">กำลังโหลดเมนู...</div></div>
+  </section>
+
+  <aside>
+    <div class="side-card tray-card">
+      <h2>
+        <span class="tray-heading-label">ตะกร้า<span class="tray-count" id="trayCount">0 จาน</span></span>
+        <button class="tray-mobile-toggle" id="trayMobileToggle" type="button" onclick="toggleMobileTray()" aria-expanded="false" aria-label="เปิดตะกร้า" title="เปิดตะกร้า"><span class="tray-mobile-label">ตะกร้าของคุณ</span><span class="tray-mobile-total" id="trayMobileTotal">0 Mora</span></button>
+      </h2>
+      <div id="trayList"><div class="empty">คุณยังไม่ได้ถือถาดอาหาร</div></div>
+      <div class="tray-total"><span>รวม</span><strong id="trayTotal">0 Mora</strong></div>
+      <div class="tray-uid-hint" id="checkoutHint" hidden>กรอก UID 4 ตัวท้ายก่อนยืนยันออเดอร์</div>
+      <div class="side-actions">
+        <button class="btn" id="checkoutBtn" onclick="checkoutTray()" disabled>ยืนยันออเดอร์</button>
+      </div>
+    </div>
+  </aside>
+</div>
+</div>
+
+<section class="order-workspace" id="orderWorkspace" hidden>
+  <div class="orders-title">
+    <div>
+      <span class="orders-eyebrow">ORDER DESK</span>
+      <h2>คิวอาหารที่ต้องเสิร์ฟ</h2>
+      <p>จัดการคิวออเดอร์และประวัติรายการ</p>
+    </div>
+    <button type="button" class="btn secondary refresh-orders-btn" onclick="loadOrderManagement()" aria-label="รีเฟรชคิวและประวัติ">รีเฟรช</button>
+  </div>
+  <div class="operations-grid">
+    <section class="operation-panel" aria-labelledby="queueTitle">
+      <div class="operation-heading">
+        <div>
+          <h3 id="queueTitle">อาหารที่รอเสิร์ฟ</h3>
+          <span id="queueSummary">0 ออเดอร์ · 0 จาน</span>
+        </div>
+        <button type="button" class="btn serve-next-btn" id="serveNextBtn" onclick="serveNextOrder()" disabled>เสิร์ฟคิวถัดไป</button>
+      </div>
+      <div class="operation-list" id="queueList"><div class="empty">ยังไม่มีอาหารในคิว</div></div>
+    </section>
+    <section class="operation-panel" aria-labelledby="historyTitle">
+      <div class="operation-heading">
+        <div>
+          <h3 id="historyTitle">ประวัติรายการ</h3>
+          <span id="historySummary">0 รายการ</span>
+        </div>
+        <button type="button" class="btn secondary undo-history-btn" id="undoHistoryBtn" onclick="undoLastOrderAction()" disabled>Undo ล่าสุด</button>
+      </div>
+      <div class="operation-list" id="historyList"><div class="empty">ยังไม่มีประวัติ</div></div>
+    </section>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<div class="dmodal-overlay" id="dmodalOverlay" onclick="if(event.target===this)closeDish()">
+  <div class="dmodal" id="dmodalBox"></div>
+</div>
+
+<div class="receipt-overlay" id="receiptOverlay" onclick="if(event.target===this)closeReceipt()">
+  <section class="receipt" role="dialog" aria-modal="true" aria-labelledby="receiptTitle">
+    <button class="receipt-close" type="button" aria-label="ปิดใบเสร็จ" onclick="closeReceipt()">×</button>
+    <div class="receipt-brand">TEYVAT KITCHEN</div>
+    <h2 id="receiptTitle">ยืนยันออเดอร์แล้ว</h2>
+    <div class="receipt-ticket"><span>UID</span><strong id="receiptUid"></strong></div>
+    <div class="receipt-count" id="receiptCount"></div>
+    <div class="receipt-items" id="receiptItems"></div>
+    <div class="receipt-total"><span>ยอดรวม</span><strong id="receiptTotal"></strong></div>
+    <button class="btn" type="button" onclick="closeReceipt()">เรียบร้อย</button>
+  </section>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
