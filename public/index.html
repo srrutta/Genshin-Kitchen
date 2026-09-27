@@ -32,36 +32,35 @@
   <div id="recommendedList"></div>
 </section>
 
-<nav class="workspace-nav" aria-label="พื้นที่การทำงาน">
-  <button type="button" class="workspace-btn active" id="menuWorkspaceBtn" aria-pressed="true" onclick="showWorkspace('menu')">เมนูอาหาร</button>
-  <button type="button" class="workspace-btn" id="ordersWorkspaceBtn" aria-pressed="false" onclick="showWorkspace('orders')">คิวอาหารและประวัติ <span class="workspace-badge" id="queueBadge">0</span></button>
-</nav>
-
 <div id="menuWorkspace">
-<nav class="view-nav" id="viewNav" aria-label="มุมมองเมนู"></nav>
-<nav class="nations" id="nationsNav" aria-label="เมือง"></nav>
+  <nav class="view-nav" id="viewNav" aria-label="มุมมองเมนู"></nav>
+  <nav class="nations" id="nationsNav" aria-label="เมือง"></nav>
 
-<div class="layout">
-  <section>
-    <div id="menuArea"><div class="loading">กำลังโหลดเมนู...</div></div>
-  </section>
+  <div class="layout">
+    <section>
+      <div id="menuArea"><div class="loading">กำลังโหลดเมนู...</div></div>
+    </section>
+  </div>
+</div>
 
-  <aside>
-    <div class="side-card tray-card">
-      <h2>
-        <span class="tray-heading-label">ตะกร้า<span class="tray-count" id="trayCount">0 จาน</span></span>
-        <button class="tray-mobile-toggle" id="trayMobileToggle" type="button" onclick="toggleMobileTray()" aria-expanded="false" aria-label="เปิดตะกร้า" title="เปิดตะกร้า"><span class="tray-mobile-label">ตะกร้าของคุณ</span><span class="tray-mobile-total" id="trayMobileTotal">0 Mora</span></button>
-      </h2>
-      <div id="trayList"><div class="empty">คุณยังไม่ได้ถือถาดอาหาร</div></div>
-      <div class="tray-total"><span>รวม</span><strong id="trayTotal">0 Mora</strong></div>
-      <div class="tray-uid-hint" id="checkoutHint" hidden>กรอก UID 4 ตัวท้ายก่อนยืนยันออเดอร์</div>
-      <div class="side-actions">
-        <button class="btn" id="checkoutBtn" onclick="checkoutTray()" disabled>ยืนยันออเดอร์</button>
-      </div>
+<aside class="bottom-dock" aria-label="ตะกร้าและคิวอาหาร">
+  <div class="side-card tray-card">
+    <h2>
+      <span class="tray-heading-label">ตะกร้า<span class="tray-count" id="trayCount">0 จาน</span></span>
+      <button class="tray-mobile-toggle" id="trayMobileToggle" type="button" onclick="toggleMobileTray()" aria-expanded="false" aria-label="เปิดตะกร้า" title="เปิดตะกร้า"><span class="tray-mobile-label">ตะกร้าของคุณ</span><span class="tray-mobile-total" id="trayMobileTotal">0 Mora</span></button>
+    </h2>
+    <div id="trayList"><div class="empty">คุณยังไม่ได้ถือถาดอาหาร</div></div>
+    <div class="tray-total"><span>รวม</span><strong id="trayTotal">0 Mora</strong></div>
+    <div class="tray-uid-hint" id="checkoutHint" hidden>กรอก UID 4 ตัวท้ายก่อนยืนยันออเดอร์</div>
+    <div class="side-actions">
+      <button class="btn" id="checkoutBtn" onclick="checkoutTray()" disabled>ยืนยันออเดอร์</button>
     </div>
-  </aside>
-</div>
-</div>
+  </div>
+  <button type="button" class="orders-floating-btn" id="ordersFloatingBtn" onclick="showWorkspace('orders')" aria-label="ดูคิวและประวัติ" title="ดูคิวและประวัติ" aria-pressed="false">
+    <span class="orders-floating-icon" aria-hidden="true">☷</span>
+    <span class="workspace-badge" id="queueBadge">0</span>
+  </button>
+</aside>
 
 <section class="order-workspace" id="orderWorkspace" hidden>
   <div class="orders-title">
@@ -70,7 +69,10 @@
       <h2>คิวอาหารที่ต้องเสิร์ฟ</h2>
       <p>จัดการคิวออเดอร์และประวัติรายการ</p>
     </div>
-    <button type="button" class="btn secondary refresh-orders-btn" onclick="loadOrderManagement()" aria-label="รีเฟรชคิวและประวัติ">รีเฟรช</button>
+    <div class="orders-title-actions">
+      <button type="button" class="btn secondary refresh-orders-btn" onclick="showWorkspace('menu')">กลับไปเมนู</button>
+      <button type="button" class="btn secondary refresh-orders-btn" onclick="loadOrderManagement()" aria-label="รีเฟรชคิวและประวัติ">รีเฟรช</button>
+    </div>
   </div>
   <div class="operations-grid">
     <section class="operation-panel" aria-labelledby="queueTitle">

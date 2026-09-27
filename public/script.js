@@ -188,10 +188,8 @@ function showWorkspace(workspace){
   const showOrders = workspace === 'orders';
   document.getElementById('menuWorkspace').hidden = showOrders;
   document.getElementById('orderWorkspace').hidden = !showOrders;
-  document.getElementById('menuWorkspaceBtn').classList.toggle('active', !showOrders);
-  document.getElementById('menuWorkspaceBtn').setAttribute('aria-pressed', String(!showOrders));
-  document.getElementById('ordersWorkspaceBtn').classList.toggle('active', showOrders);
-  document.getElementById('ordersWorkspaceBtn').setAttribute('aria-pressed', String(showOrders));
+  document.getElementById('ordersFloatingBtn').classList.toggle('active', showOrders);
+  document.getElementById('ordersFloatingBtn').setAttribute('aria-pressed', String(showOrders));
   if(showOrders) loadOrderManagement();
 }
 
@@ -302,9 +300,11 @@ function changeTrayQuantity(id, delta){
   if(traySubmitting) return;
   id = Number(id);
   if(!currentMenu.some(item => item.id === id)) return;
-  const next = Math.max(0, Math.min(99, (tray.get(id) || 0) + delta));
+  const previous = tray.get(id) || 0;
+  const next = Math.max(0, Math.min(99, previous + delta));
   if(next) tray.set(id, next);
   else tray.delete(id);
+  if(delta > 0 && previous === 0) setTrayCollapsed(false);
   renderTray();
   renderMenuArea();
   if(document.getElementById('dmodalOverlay').classList.contains('show')){
@@ -512,10 +512,10 @@ async function checkoutTray(){
     traySubmitting = false;
     renderTray();
     renderMenuArea();
-    await loadOrderManagement();
     if(receipt){
       setTrayCollapsed(true);
       openReceipt(receipt);
+      void loadOrderManagement();
     }
   }
 }

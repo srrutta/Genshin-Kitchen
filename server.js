@@ -1,11 +1,27 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(express.static('public'));
-app.use('/images', express.static('genshin-food'));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/images', express.static(path.join(__dirname, 'genshin-food')));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+function hasUpstashRedis(){
+  return Boolean(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN);
+}
+
+app.use((req, res, next) => {
+  const orderStateRoute = req.path.startsWith('/orders') || req.path === '/history' || req.path.startsWith('/history/') || req.path === '/undo';
+  if(process.env.VERCEL && orderStateRoute && !hasUpstashRedis()){
+    return res.status(503).json({ error: 'ตั้งค่า UPSTASH_REDIS_REST_URL และ UPSTASH_REDIS_REST_TOKEN ใน Vercel ก่อนใช้งานคิวและประวัติ' });
+  }
+  next();
+});
 
 // ---------------------------------------------------------------------
 // TODO 1 — โหลดเมนูจาก menu.json ก่อนเพื่อใช้ Nation/รูป/วัตถุดิบครบ แล้วใช้ API เป็น fallback
@@ -81,7 +97,7 @@ function normalizeFood(item, idx) {
 
 async function loadMenu() {
   try {
-    const fileData = fs.readFileSync('./menu.json', 'utf8');
+    const fileData = fs.readFileSync(path.join(__dirname, 'menu.json'), 'utf8');
     const localMenu = JSON.parse(fileData);
     if (!Array.isArray(localMenu) || !localMenu.length) throw new Error('menu.json ไม่มีข้อมูลเมนู');
     menuItems = localMenu.map(enrichDish);
@@ -120,7 +136,7 @@ async function loadMenu() {
     // FALLBACK: สลับมาใช้ไฟล์ Local หากเน็ตพังหรือ API ล่ม
     console.log(`⚠️ ไม่สามารถดึง API ได้ (${err.message}) -> กำลังสลับไปใช้ Local File`);
     try {
-      const fileData = fs.readFileSync('./menu.json', 'utf8');
+      const fileData = fs.readFileSync(path.join(__dirname, 'menu.json'), 'utf8');
       menuItems = JSON.parse(fileData).map(enrichDish);
       console.log(`✅ โหลดเมนูจาก menu.json สำเร็จ: ${menuItems.length} เมนู`);
     } catch (fileErr) {
@@ -241,11 +257,154 @@ class Queue {
 
 const orderQueue = new Queue();
 
-app.get('/orders', (req, res) => {
-  res.json({ items: orderQueue.items, size: orderQueue.size(), cookingNext: orderQueue.peek() || null });
-});
+const ORDER_STATE_KEY = 'teyvat-kitchen:order-state:v1';
+const ORDER_STATE_SCRIPT = `
+local raw = redis.call('GET', KEYS[1])
+local state = raw and cjson.decode(raw) or { queue = cjson.decode('[]'), history = cjson.decode('[]') }
+local operation = ARGV[1]
+local payload = cjson.decode(ARGV[2] or '{}')
 
-app.post('/orders', (req, res) => {
+local function save(result)
+  redis.call('SET', KEYS[1], cjson.encode(state))
+  return cjson.encode(result)
+end
+
+if operation == 'read' then
+  return cjson.encode(state)
+elseif operation == 'enqueue' then
+  for _, item in ipairs(payload.items) do table.insert(state.queue, item) end
+  table.insert(state.history, payload.entry)
+  return save({ size = #state.queue })
+elseif operation == 'serve' then
+  if #state.queue == 0 then return cjson.encode({ error = 'ไม่มีออเดอร์ค้างอยู่' }) end
+  local first = state.queue[1]
+  local receiptId = first.receiptId
+  local served = cjson.decode('[]')
+  while #state.queue > 0 do
+    local item = state.queue[1]
+    if #served > 0 and (not receiptId or item.receiptId ~= receiptId) then break end
+    if #served == 0 and receiptId and item.receiptId ~= receiptId then break end
+    table.insert(served, table.remove(state.queue, 1))
+    if not receiptId then break end
+  end
+  local entry = payload.entry
+  entry.item = served[1]
+  entry.items = served
+  entry.receiptId = receiptId
+  entry.quantity = #served
+  table.insert(state.history, entry)
+  return save({ message = 'เสิร์ฟ ' .. tostring(#served) .. ' จานของ UID ' .. tostring(first.uid or 'ไม่ระบุ') .. ' เรียบร้อย', size = #state.queue })
+elseif operation == 'cancel' then
+  local removed = cjson.decode('[]')
+  local kept = cjson.decode('[]')
+  local queueIndex = nil
+  for index, item in ipairs(state.queue) do
+    if item.receiptId == payload.receiptId then
+      if not queueIndex then queueIndex = index - 1 end
+      table.insert(removed, item)
+    else
+      table.insert(kept, item)
+    end
+  end
+  if #removed == 0 then return cjson.encode({ error = 'ไม่พบออเดอร์นี้ในคิว' }) end
+  state.queue = kept
+  local entry = payload.entry
+  entry.item = removed[1]
+  entry.items = removed
+  entry.receiptId = payload.receiptId
+  entry.quantity = #removed
+  entry.queueIndex = queueIndex
+  table.insert(state.history, entry)
+  return save({ message = 'ยกเลิก ' .. tostring(#removed) .. ' จานของ UID ' .. tostring(removed[1].uid or 'ไม่ระบุ') .. ' แล้ว', size = #state.queue })
+elseif operation == 'delete-history' then
+  local kept = cjson.decode('[]')
+  local found = false
+  for _, entry in ipairs(state.history) do
+    if entry.historyId == payload.historyId then found = true else table.insert(kept, entry) end
+  end
+  if not found then return cjson.encode({ error = 'ไม่พบรายการประวัตินี้' }) end
+  state.history = kept
+  return save({ message = 'ลบรายการประวัติแล้ว', size = #state.history })
+elseif operation == 'undo' then
+  if #state.history == 0 then return cjson.encode({ error = 'ไม่มีอะไรให้ย้อนกลับ' }) end
+  local last = table.remove(state.history)
+  local restored = last.items or { last.item }
+  local count = #restored
+  if last.action == 'ADD_ORDER' then
+    local kept = cjson.decode('[]')
+    if last.receiptId then
+      count = 0
+      for _, item in ipairs(state.queue) do
+        if item.receiptId == last.receiptId then count = count + 1 else table.insert(kept, item) end
+      end
+      state.queue = kept
+    else
+      if #state.queue > 0 then table.remove(state.queue) end
+      count = 1
+    end
+  elseif last.action == 'SERVE_ORDER' then
+    local queue = cjson.decode('[]')
+    for _, item in ipairs(restored) do table.insert(queue, item) end
+    for _, item in ipairs(state.queue) do table.insert(queue, item) end
+    state.queue = queue
+  elseif last.action == 'CANCEL_ORDER' then
+    local queue = cjson.decode('[]')
+    local queueIndex = math.max(0, math.min(tonumber(last.queueIndex) or 0, #state.queue))
+    for index, item in ipairs(state.queue) do
+      if index == queueIndex + 1 then
+        for _, restoredItem in ipairs(restored) do table.insert(queue, restoredItem) end
+      end
+      table.insert(queue, item)
+    end
+    if queueIndex >= #state.queue then
+      for _, restoredItem in ipairs(restored) do table.insert(queue, restoredItem) end
+    end
+    state.queue = queue
+  end
+  local message
+  if last.action == 'ADD_ORDER' and last.receiptId then
+    message = 'ยกเลิก ' .. tostring(count) .. ' จานของ UID ' .. tostring(last.item.uid or 'ไม่ระบุ') .. ' แล้ว'
+  elseif last.action == 'CANCEL_ORDER' or last.action == 'SERVE_ORDER' then
+    message = 'คืน ' .. tostring(count) .. ' จานของ UID ' .. tostring(last.item.uid or 'ไม่ระบุ') .. ' เข้าคิวแล้ว'
+  else
+    message = 'ยกเลิกการ ' .. tostring(last.action) .. ' ของ UID ' .. tostring(last.item.uid or 'ไม่ระบุ') .. ' แล้ว'
+  end
+  return save({ message = message, size = #state.queue })
+end
+
+return cjson.encode({ error = 'คำสั่งจัดการคิวไม่ถูกต้อง' })
+`;
+
+async function runUpstashOperation(operation, payload = {}){
+  if(!hasUpstashRedis()) return null;
+  const response = await fetch(process.env.UPSTASH_REDIS_REST_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${process.env.UPSTASH_REDIS_REST_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(['EVAL', ORDER_STATE_SCRIPT, '1', ORDER_STATE_KEY, operation, JSON.stringify(payload)]),
+  });
+  const result = await response.json();
+  if(!response.ok || result.error) throw new Error(result.error || `Upstash ตอบกลับ ${response.status}`);
+  return JSON.parse(result.result);
+}
+
+function createStoredHistoryEntry(action, item, items, receiptId, extra = {}){
+  return { historyId: createHistoryId(), action, item, items, receiptId, quantity: items.length, ...extra };
+}
+
+function asyncRoute(handler){
+  return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
+}
+
+app.get('/orders', asyncRoute(async (req, res) => {
+  const stored = await runUpstashOperation('read');
+  if(stored) return res.json({ items: stored.queue, size: stored.queue.length, cookingNext: stored.queue[0] || null });
+  res.json({ items: orderQueue.items, size: orderQueue.size(), cookingNext: orderQueue.peek() || null });
+}));
+
+app.post('/orders', asyncRoute(async (req, res) => {
   const food = menuItems.find(m => m.id === Number(req.body.id));
   if (!food) return res.status(404).json({ error: 'ไม่พบเมนูอาหารนี้' });
   const uid = String(req.body.uid || '').replace(/\D/g, '').slice(-4);
@@ -253,14 +412,20 @@ app.post('/orders', (req, res) => {
   const receiptId = String(req.body.receiptId || `receipt-${Date.now()}-${Math.random().toString(36).slice(2)}`).slice(0, 100);
 
   const orderItem = { ...food, uid, ...(receiptId ? { receiptId } : {}), orderTime: new Date().toLocaleTimeString('th-TH') };
+  const stored = await runUpstashOperation('enqueue', {
+    items: [orderItem],
+    entry: createStoredHistoryEntry('ADD_ORDER', orderItem, [orderItem], receiptId),
+  });
+  if(stored) return res.status(201).json({ message: `เพิ่มจานของ UID ${uid} เข้าคิวแล้ว`, size: stored.size });
+
   orderQueue.enqueue(orderItem);
 
   history.push({ action: 'ADD_ORDER', item: orderItem, items: [orderItem], receiptId, quantity: 1 });
 
   res.status(201).json({ message: `เพิ่มจานของ UID ${uid} เข้าคิวแล้ว`, size: orderQueue.size() });
-});
+}));
 
-app.post('/orders/batch', (req, res) => {
+app.post('/orders/batch', asyncRoute(async (req, res) => {
   const uid = String(req.body.uid || '').replace(/\D/g, '').slice(-4);
   if (!/^\d{4}$/.test(uid)) return res.status(400).json({ error: 'กรุณากรอก UID 4 ตัวท้ายก่อนยืนยันออเดอร์' });
   if (!Array.isArray(req.body.items) || req.body.items.length === 0) {
@@ -285,10 +450,22 @@ app.post('/orders/batch', (req, res) => {
     for (let plate = 0; plate < quantity; plate++) {
       const orderItem = { ...food, uid, receiptId, orderTime };
       receiptItems.push(orderItem);
-      orderQueue.enqueue(orderItem);
     }
   }
 
+  const stored = await runUpstashOperation('enqueue', {
+    items: receiptItems,
+    entry: createStoredHistoryEntry('ADD_ORDER', receiptItems[0], receiptItems, receiptId),
+  });
+  if(stored){
+    return res.status(201).json({
+      message: `เพิ่ม ${receiptItems.length} จานของ UID ${uid} เข้าคิวแล้ว`,
+      size: stored.size,
+      receiptId,
+    });
+  }
+
+  receiptItems.forEach(orderItem => orderQueue.enqueue(orderItem));
   history.push({
     action: 'ADD_ORDER',
     item: receiptItems[0],
@@ -302,9 +479,14 @@ app.post('/orders/batch', (req, res) => {
     size: orderQueue.size(),
     receiptId,
   });
-});
+}));
 
-app.delete('/orders/process', (req, res) => {
+app.delete('/orders/process', asyncRoute(async (req, res) => {
+  const stored = await runUpstashOperation('serve', { entry: { historyId: createHistoryId(), action: 'SERVE_ORDER' } });
+  if(stored){
+    if(stored.error) return res.status(400).json({ error: stored.error });
+    return res.json(stored);
+  }
   if (orderQueue.size() === 0) return res.status(400).json({ error: 'ไม่มีออเดอร์ค้างอยู่' });
 
   const firstItem = orderQueue.peek();
@@ -327,10 +509,18 @@ app.delete('/orders/process', (req, res) => {
   });
 
   res.json({ message: `เสิร์ฟ ${servedItems.length} จานของ UID ${firstItem.uid || 'ไม่ระบุ'} เรียบร้อย`, size: orderQueue.size() });
-});
+}));
 
-app.delete('/orders/receipt/:receiptId', (req, res) => {
+app.delete('/orders/receipt/:receiptId', asyncRoute(async (req, res) => {
   const receiptId = req.params.receiptId;
+  const stored = await runUpstashOperation('cancel', {
+    receiptId,
+    entry: { historyId: createHistoryId(), action: 'CANCEL_ORDER' },
+  });
+  if(stored){
+    if(stored.error) return res.status(404).json({ error: stored.error });
+    return res.json(stored);
+  }
   const queueIndex = orderQueue.items.findIndex(item => item.receiptId === receiptId);
   if (queueIndex < 0) return res.status(404).json({ error: 'ไม่พบออเดอร์นี้ในคิว' });
 
@@ -346,7 +536,7 @@ app.delete('/orders/receipt/:receiptId', (req, res) => {
   });
 
   res.json({ message: `ยกเลิก ${removedItems.length} จานของ UID ${removedItems[0].uid || 'ไม่ระบุ'} แล้ว`, size: orderQueue.size() });
-});
+}));
 
 // ---------------------------------------------------------------------
 // TODO 4 — Stack เก็บประวัติการจัดการออเดอร์ เพื่อทำระบบ Undo
@@ -381,19 +571,31 @@ if (process.env.ORDER_STATE_JSON) {
   delete process.env.ORDER_STATE_JSON;
 }
 
-app.get('/history', (req, res) => {
+app.get('/history', asyncRoute(async (req, res) => {
+  const stored = await runUpstashOperation('read');
+  if(stored) return res.json({ history: stored.history.reverse(), size: stored.history.length });
   res.json({ history: history.display(), size: history.items.length });
-});
+}));
 
-app.delete('/history/:historyId', (req, res) => {
+app.delete('/history/:historyId', asyncRoute(async (req, res) => {
+  const stored = await runUpstashOperation('delete-history', { historyId: req.params.historyId });
+  if(stored){
+    if(stored.error) return res.status(404).json({ error: stored.error });
+    return res.json(stored);
+  }
   const index = history.items.findIndex(item => item.historyId === req.params.historyId);
   if (index < 0) return res.status(404).json({ error: 'ไม่พบรายการประวัตินี้' });
 
   history.items.splice(index, 1);
   res.json({ message: 'ลบรายการประวัติแล้ว', size: history.items.length });
-});
+}));
 
-app.post('/undo', (req, res) => {
+app.post('/undo', asyncRoute(async (req, res) => {
+  const stored = await runUpstashOperation('undo');
+  if(stored){
+    if(stored.error) return res.status(400).json({ error: stored.error });
+    return res.json(stored);
+  }
   if (history.isEmpty()) return res.status(400).json({ error: 'ไม่มีอะไรให้ย้อนกลับ' });
 
   const last = history.pop();
@@ -432,9 +634,23 @@ app.post('/undo', (req, res) => {
     message = `ยกเลิกการ ${last.action} ของ UID ${last.item.uid || 'ไม่ระบุ'} แล้ว`;
   }
   res.json({ message, size: orderQueue.size() });
+}));
+
+app.use((err, req, res, next) => {
+  console.error(`❌ Order state request failed: ${err.message}`);
+  if(res.headersSent) return next(err);
+  res.status(503).json({ error: 'เชื่อมต่อที่เก็บคิวและประวัติไม่สำเร็จ กรุณาลองอีกครั้ง' });
 });
 
 // ---------------------------------------------------------------------
-loadMenu().then(() => {
+// เริ่มโหลดเมนูทันที (ไม่ต้องรอ .then() ก่อน export — สำคัญสำหรับ Vercel serverless)
+loadMenu();
+
+// รันแบบ local server ปกติ (เช่น `node server.js` บนเครื่องตัวเอง)
+// บน Vercel ตัว app.listen() นี้จะไม่ถูกใช้งาน (Vercel เรียก handler ผ่าน module.exports แทน)
+if (require.main === module) {
   app.listen(PORT, () => console.log(`🍔 Food System Server running: http://localhost:${PORT}`));
-});
+}
+
+// จำเป็นสำหรับ Vercel: ให้ @vercel/node ดึง Express app ไปใช้เป็น serverless function handler
+module.exports = app;
