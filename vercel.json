@@ -5,11 +5,22 @@
       "src": "server.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["public/**", "genshin-food/**", "menu.json"]
+        "includeFiles": ["dist/**", "public/**", "genshin-food/**", "menu.json"]
+      }
+    },
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
       }
     }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "server.js" }
+    { "src": "/api/(.*)", "dest": "server.js" },
+    { "src": "/images/(.*)", "dest": "server.js" },
+    { "src": "/(menu|orders|history|undo)(/.*)?", "dest": "server.js" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }

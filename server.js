@@ -1,452 +1,373 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
+import crypto from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import express from 'express';
+import { NATIONS } from './src/data.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
+const MENU_SOURCE = JSON.parse(fs.readFileSync(path.join(__dirname, 'menu.json'), 'utf8'));
+const IMAGE_DIR = path.join(__dirname, 'genshin-food');
+const DIST_DIR = path.join(__dirname, 'dist');
 
-app.use(express.json());
+app.use(express.json({ limit: '100kb' }));
+app.use('/images', express.static(IMAGE_DIR));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/images', express.static(path.join(__dirname, 'genshin-food')));
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+app.use(express.static(DIST_DIR));
 
-// ---------------------------------------------------------------------
-// TODO 1 — โหลดเมนูจาก menu.json ก่อนเพื่อใช้ Nation/รูป/วัตถุดิบครบ แล้วใช้ API เป็น fallback
-// แหล่งข้อมูล: genshin-db-api (https://github.com/theBowja/genshin-db-api)
-//   -> ดึงรายการ "อาหาร" (food) ทั้งหมดจากเกม Genshin Impact มาทำเป็นเมนู
-// ---------------------------------------------------------------------
-const API_URL = 'https://genshin-db-api.vercel.app/api/v5/foods?query=names&matchCategories=true&verboseCategories=true';
-let menuItems = [];
+const nationId = (name) => Object.keys(NATIONS).find((id) => NATIONS[id].name.toLowerCase() === name.toLowerCase()) ?? 'other';
+const slug = (value) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const restaurantTypes = new Map([
+  ["Angel's Share", 'cafe'],
+  ["Pops Kai's Tea", 'cafe'],
+  ['Puspa Café', 'cafe'],
+  ["Jut's Spice Shop", 'cafe'],
+  ['Café Lutece', 'cafe'],
+  ['Kvasnik', 'cafe'],
+  ['Lianfang Dim Sum', 'street'],
+  ["Ryouko's Street Food", 'street'],
+  ["Jahangir's Delights", 'street'],
+  ["Azalai's Merchat", 'street'],
+  ["Zakan's Street Bites", 'street'],
+  ["Limppu's Cart", 'street'],
+]);
 
-// menu.json มีข้อมูลเมือง (nation) ร้านอาหาร (restaurant) และวัตถุดิบ (ingredients)
-// ของแต่ละจานอยู่แล้ว แต่ข้อมูลจาก genshin-db-api ภายนอกไม่มี 3 ฟิลด์นี้
-// จึงใช้ตารางนี้เติมให้โดยอ้างอิงชื่อจาน ถ้าไม่พบในตารางจะตกไปกลุ่ม "อื่นๆ"
-// (Teyvat Kitchen) และไม่มีวัตถุดิบให้แสดง
-const DISH_FALLBACK = {
-  'Jueyun Guoba':            { nation: 'liyue',     restaurant: 'Wanmin Restaurant',    ingredients: ['Jueyun Chili', 'Flour', 'Sugar'] },
-  'Sweet Madame':            { nation: 'liyue',     restaurant: 'Wanmin Restaurant',    ingredients: ['Flour', 'Jueyun Chili', 'Raw Meat'] },
-  'Mondstadt Hash Brown':    { nation: 'mondstadt', restaurant: 'Good Hunter',          ingredients: ['Potato', 'Flour', 'Butter'] },
-  'Northern Smoked Chicken': { nation: 'mondstadt', restaurant: 'Good Hunter',          ingredients: ['Raw Meat', 'Spice', 'Salt'] },
-  'Almond Tofu':             { nation: 'liyue',     restaurant: 'Liuli Pavilion',       ingredients: ['Milk', 'Sugar', 'Almond'] },
-  'Sunset Fried Rice':       { nation: 'liyue',     restaurant: 'Wanmin Restaurant',    ingredients: ['Rice', 'Sunsettia', 'Bird Egg'] },
-  'Teyvat Fried Egg':        { nation: 'mondstadt', restaurant: 'Good Hunter',          ingredients: ['Bird Egg', 'Butter', 'Salt'] },
-  'Moon Pie':                { nation: 'liyue',     restaurant: 'Liuli Pavilion',       ingredients: ['Flour', 'Sugar', 'Milk'] },
-  'Stir-Fried Shrimp':       { nation: 'liyue',     restaurant: 'Liuli Pavilion',       ingredients: ['Shrimp Meat', 'Onion', 'Pepper'] },
-  'Calla Lily Seafood Soup': { nation: 'inazuma',   restaurant: 'Komore Teahouse',      ingredients: ['Fish', 'Calla Lily', 'Seagrass'] },
-  'Cold Cut Platter':        { nation: 'mondstadt', restaurant: "Angel's Share",        ingredients: ['Raw Meat', 'Cheese', 'Onion'] },
-  'Tandoori Roast Chicken':  { nation: 'sumeru',    restaurant: 'Aaru Village Kitchen', ingredients: ['Raw Meat', 'Spice', 'Pepper'] },
-  'Crystal Shrimp':          { nation: 'liyue',     restaurant: 'Wanmin Restaurant',    ingredients: ['Shrimp Meat', 'Seagrass', 'Bird Egg'] },
-  "Fisherman's Toast":       { nation: 'mondstadt', restaurant: 'Good Hunter',          ingredients: ['Flour', 'Butter', 'Cheese'] },
-  'Golden Crab':             { nation: 'liyue',     restaurant: 'Liuli Pavilion',       ingredients: ['Crab', 'Butter', 'Sunsettia'] },
-  'Jasmine Braised Lamb':    { nation: 'sumeru',    restaurant: 'Aaru Village Kitchen', ingredients: ['Raw Meat', 'Spice', 'Fermented Juice'] },
-  'Streusel-Crusted Meat':   { nation: 'mondstadt', restaurant: "Angel's Share",        ingredients: ['Raw Meat', 'Flour', 'Sugar'] },
-  'Universal Peace':         { nation: 'liyue',     restaurant: 'Wanmin Restaurant',    ingredients: ['Fish', 'Crab', 'Shrimp Meat'] },
-  "Adeptus' Temptation":     { nation: 'liyue',     restaurant: 'Liuli Pavilion',       ingredients: ['Fish', 'Spice', 'Sunsettia'] },
-  'Berry and Mint Burst':    { nation: 'mondstadt', restaurant: "Angel's Share",        ingredients: ['Valberry', 'Mint', 'Sugar'] },
-};
+const restaurantsById = new Map();
+const dishes = [];
 
-function enrichDish(item) {
-  const fb = DISH_FALLBACK[item.name] || {};
-  return {
-    ...item,
-    nation: item.nation || fb.nation || 'other',
-    restaurant: item.restaurant || fb.restaurant || 'Teyvat Kitchen',
-    ingredients: (item.ingredients && item.ingredients.length) ? item.ingredients : (fb.ingredients || []),
-  };
-}
-
-// genshin-db เปลี่ยนชื่อ field ไปมาในแต่ละเวอร์ชัน (เช่น rarity/qualityType,
-// effect/description) จึงใช้ฟังก์ชันนี้เลือก field ที่มีจริงแบบยืดหยุ่น
-// แทนที่จะอิงชื่อ field ตายตัวชื่อเดียว
-function findImageUrl(images) {
-  if (!images || typeof images !== 'object') return null;
-  const preferredKeys = ['icon', 'card', 'itemIcon', 'nameicon', 'filename_icon', 'portrait'];
-  for (const key of preferredKeys) {
-    const v = images[key];
-    if (typeof v === 'string' && v.startsWith('http')) return v;
+for (const item of MENU_SOURCE) {
+  if (!item || !Number.isInteger(item.id) || !item.name || !item.restaurant || !item.nation) {
+    throw new Error('menu.json contains a dish missing its id, name, restaurant, or nation');
   }
-  for (const v of Object.values(images)) {
-    if (typeof v === 'string' && v.startsWith('http')) return v;
+  const nation = nationId(item.nation);
+  const restaurantId = `${nation}-${slug(item.restaurant)}`;
+  if (!restaurantsById.has(restaurantId)) {
+    restaurantsById.set(restaurantId, {
+      id: restaurantId,
+      name: item.restaurant,
+      nation,
+      type: restaurantTypes.get(item.restaurant) ?? 'restaurant',
+      owner: item.owner ?? '',
+      note: '',
+      dishNames: [],
+      coverImage: null,
+    });
   }
-  return null;
-}
 
-function normalizeFood(item, idx) {
-  const rarity = Number(item.rarity ?? item.rarityType ?? item.qualityType ?? 1) || 1;
-  return enrichDish({
-    id: item.id ?? idx + 1,
+  const imageExists = typeof item.image === 'string' && fs.existsSync(path.join(IMAGE_DIR, path.basename(item.image)));
+  const dish = {
+    id: item.id,
     name: item.name,
-    rarity,
-    price: rarity * 5000, // ไม่มีราคาจริงในเกม จึงสมมติราคาเป็น Mora ตามระดับความหายาก (rarity)
-    image: findImageUrl(item.images) || (typeof item.image === 'string' ? item.image : null),
-  });
+    price: Number(item.price),
+    image: imageExists ? `/images/${encodeURIComponent(path.basename(item.image))}` : null,
+    category: item.type === 'Drink' ? 'drink' : item.type === 'Dessert' ? 'sweet' : 'main',
+    effect: item.effect ?? null,
+    effectDescription: item.effectDescription ?? item.description ?? null,
+    ingredients: Array.isArray(item.ingredients) ? item.ingredients : [],
+    restaurantId,
+    restaurantName: item.restaurant,
+    nation,
+  };
+  if (!Number.isFinite(dish.price) || dish.price < 0) throw new Error(`Invalid price for menu item ${item.id}`);
+  dishes.push(dish);
+
+  const restaurant = restaurantsById.get(restaurantId);
+  restaurant.dishNames.push(dish.name);
+  if (!restaurant.coverImage && dish.image) restaurant.coverImage = dish.image;
 }
 
-async function loadMenu() {
-  try {
-    const fileData = fs.readFileSync(path.join(__dirname, 'menu.json'), 'utf8');
-    const localMenu = JSON.parse(fileData);
-    if (!Array.isArray(localMenu) || !localMenu.length) throw new Error('menu.json ไม่มีข้อมูลเมนู');
-    menuItems = localMenu.map(enrichDish);
-    console.log(`✅ โหลดเมนูจาก menu.json สำเร็จ: ${menuItems.length} เมนู`);
-    return;
-  } catch (err) {
-    console.log(`⚠️ โหลด menu.json ไม่สำเร็จ (${err.message}) -> กำลังลอง API ภายนอก`);
-  }
+const restaurants = [...restaurantsById.values()];
+const dishesByRestaurant = new Map(
+  restaurants.map((restaurant) => [restaurant.id, dishes.filter((dish) => dish.restaurantId === restaurant.id)]),
+);
+const menuOfDay = new Map();
+const MENU_TTL = 5 * 60 * 1000;
+const STAGE_SECONDS = { Pending: 20, Accepted: 10, Preparing: 25 };
+const orders = new Map();
 
-  try {
-    const res = await fetch(API_URL);
+function pickMenuOfDay(restaurantId) {
+  const date = new Date().toISOString().slice(0, 10);
+  const key = `${date}:${restaurantId}`;
+  const cached = menuOfDay.get(key);
+  if (cached && Date.now() - cached.at < MENU_TTL) return cached.items;
 
-    // ดัก Error กรณี API ส่งหน้า HTML กลับมาแทน JSON
-    const contentType = res.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      throw new Error("API ตอบกลับมาเป็น HTML (อาจจะติดบล็อกของมหาลัยหรือเน็ตมีปัญหา)");
-    }
-
-    if (!res.ok) throw new Error('Status: ' + res.status);
-
-    const data = await res.json();
-
-    // ปกติ query=names + matchCategories + verboseCategories จะได้ array ของ
-    // ออบเจ็กต์อาหารตรง ๆ แต่บาง option (เช่น dumpResult) จะห่อมาใน { result: [...] }
-    const rawList = Array.isArray(data) ? data : (Array.isArray(data.result) ? data.result : []);
-    if (!rawList.length) throw new Error('API ส่งข้อมูลว่างกลับมา');
-
-    menuItems = rawList
-      .filter(item => item && item.name)
-      .slice(0, 30) // จำกัดจำนวนเมนูไม่ให้เยอะเกินไป (genshin-db มีอาหารเป็นร้อยรายการ)
-      .map((item, idx) => normalizeFood(item, idx));
-
-    console.log(`✅ โหลดเมนูอาหาร (Genshin Impact) จาก API ภายนอกสำเร็จ: ${menuItems.length} เมนู`);
-
-  } catch (err) {
-    // FALLBACK: สลับมาใช้ไฟล์ Local หากเน็ตพังหรือ API ล่ม
-    console.log(`⚠️ ไม่สามารถดึง API ได้ (${err.message}) -> กำลังสลับไปใช้ Local File`);
-    try {
-      const fileData = fs.readFileSync(path.join(__dirname, 'menu.json'), 'utf8');
-      menuItems = JSON.parse(fileData).map(enrichDish);
-      console.log(`✅ โหลดเมนูจาก menu.json สำเร็จ: ${menuItems.length} เมนู`);
-    } catch (fileErr) {
-      console.error(`❌ ไม่พบไฟล์ menu.json กรุณาสร้างไฟล์นี้ไว้ในโฟลเดอร์เดียวกัน`);
-    }
-  }
+  const pool = [...(dishesByRestaurant.get(restaurantId) ?? [])];
+  let seed = 0;
+  for (const char of key) seed = (seed * 31 + char.charCodeAt(0)) >>> 0;
+  const random = () => {
+    seed = (seed + 0x6d2b79f5) | 0;
+    let value = seed;
+    value = Math.imul(value ^ (value >>> 15), value | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+  };
+  const items = [];
+  while (items.length < 3 && pool.length) items.push(pool.splice(Math.floor(random() * pool.length), 1)[0]);
+  menuOfDay.set(key, { at: Date.now(), items });
+  return items;
 }
 
-// ---------------------------------------------------------------------
-// TODO 2 — Sort (Insertion: น้อยไปมาก, Selection/Bubble: มากไปน้อย)
-// ---------------------------------------------------------------------
-function selectionSort(arr) {
-  const a = [...arr];
-  for (let i = 0; i < a.length - 1; i++) {
-    let maxIdx = i;
-    for (let j = i + 1; j < a.length; j++) {
-      if (a[j].price > a[maxIdx].price) maxIdx = j;
-    }
-    [a[i], a[maxIdx]] = [a[maxIdx], a[i]];
-  }
-  return a;
+export function getOrderStatus(order, now = Date.now()) {
+  if (order.cancelledAt) return 'Cancelled';
+  const elapsed = Math.max(0, (now - order.createdAt) / 1000);
+  const pendingEnd = STAGE_SECONDS.Pending;
+  const acceptedEnd = pendingEnd + STAGE_SECONDS.Accepted;
+  const preparingEnd = acceptedEnd + STAGE_SECONDS.Preparing;
+  const finishAt = (preparingEnd + order.eta) * 1000 + order.createdAt;
+  if (elapsed < pendingEnd) return 'Pending';
+  if (elapsed < acceptedEnd) return 'Accepted';
+  if (elapsed < preparingEnd) return 'Preparing';
+  if (now < finishAt) return 'Leading';
+  return 'Completed';
 }
 
-function insertionSort(arr) {
-  const a = [...arr];
-  for (let i = 1; i < a.length; i++) {
-    const key = a[i];
+function withOrderStatus(order, now = Date.now()) {
+  const status = getOrderStatus(order, now);
+  return { ...order, status, cancelable: status === 'Pending' || status === 'Accepted' };
+}
+
+function insertionSortByPrice(items) {
+  const sorted = [...items];
+  for (let i = 1; i < sorted.length; i++) {
+    const current = sorted[i];
     let j = i - 1;
-    while (j >= 0 && a[j].price > key.price) {
-      a[j + 1] = a[j];
+    while (j >= 0 && sorted[j].price > current.price) {
+      sorted[j + 1] = sorted[j];
       j--;
     }
-    a[j + 1] = key;
+    sorted[j + 1] = current;
   }
-  return a;
+  return sorted;
 }
 
-function bubbleSort(arr) {
-  const a = [...arr];
-  for (let i = 0; i < a.length - 1; i++) {
-    for (let j = 0; j < a.length - 1 - i; j++) {
-      if (a[j].price < a[j + 1].price) {
-        [a[j], a[j + 1]] = [a[j + 1], a[j]];
-      }
-    }
-  }
-  return a;
-}
-
-// ---------------------------------------------------------------------
-// Endpoint พิสูจน์ว่ามีการดึง API ภายนอกจริง (genshin-db-api)
-// ไม่แตะ menuItems ที่หน้าเว็บใช้อยู่เลย ใช้แค่ดูผล/debug/แสดงเป็นหลักฐาน
-// ---------------------------------------------------------------------
-app.get('/menu/sync-preview', async (req, res) => {
-  const fetchedAt = new Date().toISOString();
-  try {
-    const apiRes = await fetch(API_URL);
-
-    const contentType = apiRes.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
-      throw new Error('API ตอบกลับมาเป็น HTML (อาจจะติดบล็อกของมหาลัยหรือเน็ตมีปัญหา)');
-    }
-    if (!apiRes.ok) throw new Error('Status: ' + apiRes.status);
-
-    const data = await apiRes.json();
-    const rawList = Array.isArray(data) ? data : (Array.isArray(data.result) ? data.result : []);
-    if (!rawList.length) throw new Error('API ส่งข้อมูลว่างกลับมา');
-
-    const items = rawList
-      .filter(item => item && item.name)
-      .slice(0, 30)
-      .map((item, idx) => normalizeFood(item, idx));
-
-    res.json({
-      source: 'genshin-db-api',
-      url: API_URL,
-      fetchedAt,
-      success: true,
-      count: items.length,
-      sample: items.slice(0, 5),
-      items,
-    });
-  } catch (err) {
-    res.status(502).json({
-      source: 'genshin-db-api',
-      url: API_URL,
-      fetchedAt,
-      success: false,
-      error: err.message,
-      count: 0,
-      items: [],
-    });
-  }
+app.get('/', (req, res) => {
+  const indexPath = path.join(DIST_DIR, 'index.html');
+  if (!fs.existsSync(indexPath)) return res.status(503).send('Build the frontend with npm run build first.');
+  return res.sendFile(indexPath);
 });
 
-// Endpoint ดึงเมนู
+app.get('/api/restaurants', (req, res) => {
+  const query = String(req.query.search ?? '').trim().toLowerCase();
+  const nation = String(req.query.nation ?? '');
+  const type = String(req.query.type ?? '');
+  const result = restaurants.filter((restaurant) =>
+    (!nation || restaurant.nation === nation)
+    && (!type || restaurant.type === type)
+    && (!query || `${restaurant.name} ${restaurant.nation} ${restaurant.dishNames.join(' ')}`.toLowerCase().includes(query)));
+  res.json({ restaurants: result });
+});
+
+app.get('/api/menu', (req, res) => {
+  res.json({ items: dishes, count: dishes.length });
+});
+
+app.get('/api/restaurants/:id/menu', (req, res) => {
+  const restaurant = restaurantsById.get(req.params.id);
+  if (!restaurant) return res.status(404).json({ error: 'ไม่พบร้านอาหารนี้' });
+  const restaurantDishes = dishesByRestaurant.get(restaurant.id) ?? [];
+  return res.json({ restaurant, dishes: restaurantDishes, menuOfDay: pickMenuOfDay(restaurant.id) });
+});
+
+app.post('/api/login', (req, res) => {
+  const { uid, nation, address } = req.body ?? {};
+  if (!/^\d{4}$/.test(String(uid ?? '')) || !NATIONS[nation] || !NATIONS[nation].landmarks.includes(address)) {
+    return res.status(400).json({ error: 'กรุณากรอกข้อมูลให้ครบ (UID 4 ตัวท้าย, Nation, Address)' });
+  }
+  return res.json({ uid, nation, address });
+});
+
+app.get('/api/orders', (req, res) => {
+  const uid = String(req.query.uid ?? '');
+  if (!/^\d{4}$/.test(uid)) return res.status(400).json({ error: 'กรุณาระบุ UID 4 ตัวท้าย' });
+  const userOrders = [...orders.values()]
+    .filter((order) => order.uid === uid)
+    .sort((a, b) => b.createdAt - a.createdAt)
+    .map((order) => withOrderStatus(order));
+  return res.json({ orders: userOrders });
+});
+
+app.get('/api/orders/:id', (req, res) => {
+  const uid = String(req.query.uid ?? '');
+  const order = orders.get(req.params.id);
+  if (!order || order.uid !== uid) return res.status(404).json({ error: 'ไม่พบออเดอร์นี้' });
+  return res.json({ order: withOrderStatus(order) });
+});
+
+app.post('/api/orders', (req, res) => {
+  const { uid, nation, restaurantId, method, items } = req.body ?? {};
+  if (!/^\d{4}$/.test(String(uid ?? '')) || !NATIONS[nation]) {
+    return res.status(400).json({ error: 'กรุณาเข้าสู่ระบบก่อนยืนยันออเดอร์' });
+  }
+  if (!['bank', 'promptpay', 'cod'].includes(method)) {
+    return res.status(400).json({ error: 'กรุณาเลือกช่องทางชำระเงิน' });
+  }
+  const restaurant = restaurantsById.get(restaurantId);
+  if (!restaurant) return res.status(404).json({ error: 'ไม่พบร้านอาหารนี้' });
+  if (!Array.isArray(items) || items.length === 0 || items.length > 50) {
+    return res.status(400).json({ error: 'รายการอาหารไม่ถูกต้อง' });
+  }
+
+  const available = new Map((dishesByRestaurant.get(restaurantId) ?? []).map((dish) => [dish.id, dish]));
+  const normalizedItems = [];
+  const seen = new Set();
+  for (const line of items) {
+    const dish = available.get(Number(line?.id));
+    const qty = Number(line?.qty);
+    if (!dish) return res.status(404).json({ error: 'ไม่พบเมนูอาหารนี้ในร้านที่เลือก' });
+    if (!Number.isInteger(qty) || qty < 1 || qty > 99 || seen.has(dish.id)) {
+      return res.status(400).json({ error: 'จำนวนจานต้องอยู่ระหว่าง 1 ถึง 99 และห้ามส่งเมนูซ้ำ' });
+    }
+    seen.add(dish.id);
+    normalizedItems.push({ id: dish.id, name: dish.name, price: dish.price, image: dish.image, qty });
+  }
+
+  const subtotal = normalizedItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const sameNation = restaurant.nation === nation;
+  const deliveryFee = sameNation ? 10 : 30;
+  const eta = sameNation ? 15 : 40;
+  const order = {
+    id: crypto.randomUUID(),
+    uid,
+    restaurantId,
+    restaurantName: restaurant.name,
+    items: normalizedItems,
+    subtotal,
+    deliveryFee,
+    eta,
+    total: subtotal + deliveryFee,
+    method,
+    createdAt: Date.now(),
+    cancelledAt: null,
+  };
+  orders.set(order.id, order);
+  return res.status(201).json({ order: withOrderStatus(order) });
+});
+
+app.patch('/api/orders/:id/cancel', (req, res) => {
+  const uid = String(req.body?.uid ?? '');
+  const order = orders.get(req.params.id);
+  if (!order || order.uid !== uid) return res.status(404).json({ error: 'ไม่พบออเดอร์นี้' });
+  const current = withOrderStatus(order);
+  if (!current.cancelable) {
+    return res.status(409).json({ error: 'ยกเลิกไม่ได้ ออเดอร์เข้าสู่ขั้นตอนถัดไปแล้ว', order: current });
+  }
+  order.cancelledAt = Date.now();
+  return res.json({ order: withOrderStatus(order) });
+});
+
 app.get('/menu', (req, res) => {
-  const algo = req.query.sort || 'selection';
-
-  let sorted;
-  if (algo === 'insertion')   sorted = insertionSort(menuItems);
-  else if (algo === 'bubble') sorted = bubbleSort(menuItems);
-  else                        sorted = selectionSort(menuItems);
-
-  res.json({ algorithm: algo, count: sorted.length, data: sorted });
+  const algorithm = req.query.sort || 'selection';
+  const sorted = algorithm === 'insertion' ? insertionSortByPrice(dishes) : [...dishes].sort((a, b) => b.price - a.price);
+  return res.json({ algorithm, count: sorted.length, data: sorted });
 });
 
-// ---------------------------------------------------------------------
-// TODO 3 — Queue (คิวออเดอร์ร้านอาหาร)
-// ---------------------------------------------------------------------
-class Queue {
-  constructor() { this.items = []; }
-  enqueue(item) { this.items.push(item); }       // รับออเดอร์
-  dequeue()     { return this.items.shift(); }   // ทำเสร็จ เอาไปเสิร์ฟ
-  peek()        { return this.items[0]; }
-  size()        { return this.items.length; }
-}
-
-const orderQueue = new Queue();
+const orderQueue = [];
+const history = [];
+let historyId = 0;
+const recordHistory = (entry) => history.push({ ...entry, historyId: `history-${Date.now()}-${++historyId}` });
 
 app.get('/orders', (req, res) => {
-  res.json({ items: orderQueue.items, size: orderQueue.size(), cookingNext: orderQueue.peek() || null });
-});
-
-app.post('/orders', (req, res) => {
-  const food = menuItems.find(m => m.id === Number(req.body.id));
-  if (!food) return res.status(404).json({ error: 'ไม่พบเมนูอาหารนี้' });
-  const uid = String(req.body.uid || '').replace(/\D/g, '').slice(-4);
-  if (!/^\d{4}$/.test(uid)) return res.status(400).json({ error: 'กรุณากรอก UID 4 ตัวท้ายก่อนยืนยันออเดอร์' });
-  const receiptId = String(req.body.receiptId || `receipt-${Date.now()}-${Math.random().toString(36).slice(2)}`).slice(0, 100);
-
-  const orderItem = { ...food, uid, ...(receiptId ? { receiptId } : {}), orderTime: new Date().toLocaleTimeString('th-TH') };
-  orderQueue.enqueue(orderItem);
-
-  history.push({ action: 'ADD_ORDER', item: orderItem, items: [orderItem], receiptId, quantity: 1 });
-
-  res.status(201).json({ message: `เพิ่มจานของ UID ${uid} เข้าคิวแล้ว`, size: orderQueue.size() });
+  res.json({ items: orderQueue, size: orderQueue.length, cookingNext: orderQueue[0] ?? null });
 });
 
 app.post('/orders/batch', (req, res) => {
-  const uid = String(req.body.uid || '').replace(/\D/g, '').slice(-4);
+  const uid = String(req.body?.uid ?? '').replace(/\D/g, '').slice(-4);
   if (!/^\d{4}$/.test(uid)) return res.status(400).json({ error: 'กรุณากรอก UID 4 ตัวท้ายก่อนยืนยันออเดอร์' });
   if (!Array.isArray(req.body.items) || req.body.items.length === 0) {
     return res.status(400).json({ error: 'ไม่มีอาหารในใบเสร็จ' });
   }
 
-  const lines = [];
+  const receiptId = String(req.body.receiptId || `receipt-${Date.now()}-${crypto.randomUUID()}`).slice(0, 100);
+  const receiptItems = [];
   for (const line of req.body.items) {
-    const food = menuItems.find(item => item.id === Number(line?.id));
+    const food = dishes.find((dish) => dish.id === Number(line?.id));
     const quantity = Number(line?.quantity);
     if (!food) return res.status(404).json({ error: 'ไม่พบเมนูอาหารนี้' });
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > 99) {
       return res.status(400).json({ error: 'จำนวนจานต้องอยู่ระหว่าง 1 ถึง 99' });
     }
-    lines.push({ food, quantity });
+    for (let plate = 0; plate < quantity; plate++) receiptItems.push({ ...food, uid, receiptId });
   }
+  orderQueue.push(...receiptItems);
+  recordHistory({ action: 'ADD_ORDER', item: receiptItems[0], items: receiptItems, receiptId, quantity: receiptItems.length });
+  return res.status(201).json({ message: `เพิ่ม ${receiptItems.length} จานของ UID ${uid} เข้าคิวแล้ว`, size: orderQueue.length, receiptId });
+});
 
-  const receiptId = String(req.body.receiptId || `receipt-${Date.now()}-${Math.random().toString(36).slice(2)}`).slice(0, 100);
-  const orderTime = new Date().toLocaleTimeString('th-TH');
-  const receiptItems = [];
-  for (const { food, quantity } of lines) {
-    for (let plate = 0; plate < quantity; plate++) {
-      const orderItem = { ...food, uid, receiptId, orderTime };
-      receiptItems.push(orderItem);
-    }
-  }
-
-  receiptItems.forEach(orderItem => orderQueue.enqueue(orderItem));
-  history.push({
-    action: 'ADD_ORDER',
-    item: receiptItems[0],
-    items: receiptItems,
-    receiptId,
-    quantity: receiptItems.length,
-  });
-
-  res.status(201).json({
-    message: `เพิ่ม ${receiptItems.length} จานของ UID ${uid} เข้าคิวแล้ว`,
-    size: orderQueue.size(),
-    receiptId,
-  });
+app.post('/orders', (req, res) => {
+  const food = dishes.find((dish) => dish.id === Number(req.body?.id));
+  if (!food) return res.status(404).json({ error: 'ไม่พบเมนูอาหารนี้' });
+  const uid = String(req.body?.uid ?? '').replace(/\D/g, '').slice(-4);
+  if (!/^\d{4}$/.test(uid)) return res.status(400).json({ error: 'กรุณากรอก UID 4 ตัวท้ายก่อนยืนยันออเดอร์' });
+  const receiptId = String(req.body.receiptId || `receipt-${Date.now()}-${crypto.randomUUID()}`).slice(0, 100);
+  const orderItem = { ...food, uid, receiptId, orderTime: new Date().toLocaleTimeString('th-TH') };
+  orderQueue.push(orderItem);
+  recordHistory({ action: 'ADD_ORDER', item: orderItem, items: [orderItem], receiptId, quantity: 1 });
+  return res.status(201).json({ message: `เพิ่มจานของ UID ${uid} เข้าคิวแล้ว`, size: orderQueue.length });
 });
 
 app.delete('/orders/process', (req, res) => {
-  if (orderQueue.size() === 0) return res.status(400).json({ error: 'ไม่มีออเดอร์ค้างอยู่' });
-
-  const firstItem = orderQueue.peek();
-  const receiptId = firstItem.receiptId;
-  const servedItems = [];
-  if (receiptId) {
-    while (orderQueue.size() && orderQueue.peek().receiptId === receiptId) {
-      servedItems.push(orderQueue.dequeue());
-    }
-  } else {
-    servedItems.push(orderQueue.dequeue());
-  }
-
-  history.push({
-    action: 'SERVE_ORDER',
-    item: servedItems[0],
-    items: servedItems,
-    receiptId,
-    quantity: servedItems.length,
-  });
-
-  res.json({ message: `เสิร์ฟ ${servedItems.length} จานของ UID ${firstItem.uid || 'ไม่ระบุ'} เรียบร้อย`, size: orderQueue.size() });
+  if (!orderQueue.length) return res.status(400).json({ error: 'ไม่มีออเดอร์ค้างอยู่' });
+  const firstItem = orderQueue[0];
+  const servedItems = firstItem.receiptId
+    ? orderQueue.splice(0, orderQueue.findIndex((item) => item.receiptId !== firstItem.receiptId) < 0
+      ? orderQueue.length
+      : orderQueue.findIndex((item) => item.receiptId !== firstItem.receiptId))
+    : orderQueue.splice(0, 1);
+  recordHistory({ action: 'SERVE_ORDER', item: servedItems[0], items: servedItems, receiptId: firstItem.receiptId, quantity: servedItems.length });
+  return res.json({ message: `เสิร์ฟ ${servedItems.length} จานของ UID ${firstItem.uid || 'ไม่ระบุ'} เรียบร้อย`, size: orderQueue.length });
 });
 
 app.delete('/orders/receipt/:receiptId', (req, res) => {
-  const receiptId = req.params.receiptId;
-  const queueIndex = orderQueue.items.findIndex(item => item.receiptId === receiptId);
+  const queueIndex = orderQueue.findIndex((item) => item.receiptId === req.params.receiptId);
   if (queueIndex < 0) return res.status(404).json({ error: 'ไม่พบออเดอร์นี้ในคิว' });
-
-  const removedItems = orderQueue.items.filter(item => item.receiptId === receiptId);
-  orderQueue.items = orderQueue.items.filter(item => item.receiptId !== receiptId);
-  history.push({
-    action: 'CANCEL_ORDER',
-    item: removedItems[0],
-    items: removedItems,
-    receiptId,
-    quantity: removedItems.length,
-    queueIndex,
-  });
-
-  res.json({ message: `ยกเลิก ${removedItems.length} จานของ UID ${removedItems[0].uid || 'ไม่ระบุ'} แล้ว`, size: orderQueue.size() });
-});
-
-// ---------------------------------------------------------------------
-// TODO 4 — Stack เก็บประวัติการจัดการออเดอร์ เพื่อทำระบบ Undo
-// ---------------------------------------------------------------------
-let historyIdSequence = 0;
-function createHistoryId(){
-  historyIdSequence += 1;
-  return `history-${Date.now()}-${historyIdSequence}`;
-}
-
-class Stack {
-  constructor() { this.items = []; }
-  push(item)    { this.items.push({ ...item, historyId: item.historyId || createHistoryId() }); }
-  pop()         { return this.items.pop(); }
-  peek()        { return this.items[this.items.length - 1]; }
-  isEmpty()     { return this.items.length === 0; }
-  display()     { return [...this.items].reverse(); }
-}
-
-const history = new Stack();
-
-if (process.env.ORDER_STATE_JSON) {
-  try {
-    const state = JSON.parse(process.env.ORDER_STATE_JSON);
-    if (!Array.isArray(state.queue) || !Array.isArray(state.history)) throw new Error('Invalid Queue/Stack snapshot');
-    orderQueue.items = state.queue;
-    history.items = state.history.map(item => ({ ...item, historyId: item.historyId || createHistoryId() }));
-    console.log(`✅ กู้คืน Queue ${state.queue.length} รายการ และ Stack ${state.history.length} รายการ`);
-  } catch (err) {
-    console.error(`⚠️ กู้คืนสถานะเดิมไม่สำเร็จ: ${err.message}`);
+  const removedItems = orderQueue.filter((item) => item.receiptId === req.params.receiptId);
+  for (let i = orderQueue.length - 1; i >= 0; i--) {
+    if (orderQueue[i].receiptId === req.params.receiptId) orderQueue.splice(i, 1);
   }
-  delete process.env.ORDER_STATE_JSON;
-}
+  recordHistory({ action: 'CANCEL_ORDER', item: removedItems[0], items: removedItems, receiptId: req.params.receiptId, quantity: removedItems.length, queueIndex });
+  return res.json({ message: `ยกเลิก ${removedItems.length} จานของ UID ${removedItems[0].uid || 'ไม่ระบุ'} แล้ว`, size: orderQueue.length });
+});
 
 app.get('/history', (req, res) => {
-  res.json({ history: history.display(), size: history.items.length });
+  res.json({ history: [...history].reverse(), size: history.length });
 });
 
-app.delete('/history/:historyId', (req, res) => {
-  const index = history.items.findIndex(item => item.historyId === req.params.historyId);
+app.delete('/history/:id', (req, res) => {
+  const index = history.findIndex((entry) => entry.historyId === req.params.id);
   if (index < 0) return res.status(404).json({ error: 'ไม่พบรายการประวัตินี้' });
-
-  history.items.splice(index, 1);
-  res.json({ message: 'ลบรายการประวัติแล้ว', size: history.items.length });
+  history.splice(index, 1);
+  return res.json({ message: 'ลบรายการประวัติแล้ว', size: history.length });
 });
 
 app.post('/undo', (req, res) => {
-  if (history.isEmpty()) return res.status(400).json({ error: 'ไม่มีอะไรให้ย้อนกลับ' });
-
   const last = history.pop();
-  let removedCount = 0;
-
+  if (!last) return res.status(400).json({ error: 'ไม่มีอะไรให้ย้อนกลับ' });
+  const entries = last.items?.length ? last.items : [last.item];
   if (last.action === 'ADD_ORDER') {
-    if (last.item.receiptId) {
-      removedCount = orderQueue.items.filter(item => item.receiptId === last.item.receiptId).length;
-      orderQueue.items = orderQueue.items.filter(item => item.receiptId !== last.item.receiptId);
-      history.items = history.items.filter(entry =>
-        !(entry.action === 'ADD_ORDER' && entry.item.receiptId === last.item.receiptId)
-      );
-    } else {
-      orderQueue.items.pop();
-      removedCount = 1;
+    for (let i = orderQueue.length - 1; i >= 0; i--) {
+      if (orderQueue[i].receiptId === last.receiptId) orderQueue.splice(i, 1);
     }
   } else if (last.action === 'SERVE_ORDER') {
-    const restoredItems = Array.isArray(last.items) && last.items.length ? last.items : [last.item];
-    orderQueue.items.unshift(...restoredItems);
-    removedCount = restoredItems.length;
+    orderQueue.unshift(...entries);
   } else if (last.action === 'CANCEL_ORDER') {
-    const restoredItems = Array.isArray(last.items) && last.items.length ? last.items : [last.item];
-    const queueIndex = Math.min(Math.max(Number(last.queueIndex) || 0, 0), orderQueue.size());
-    orderQueue.items.splice(queueIndex, 0, ...restoredItems);
-    removedCount = restoredItems.length;
+    orderQueue.splice(Math.min(last.queueIndex, orderQueue.length), 0, ...entries);
   }
-
-  let message;
-  if (last.action === 'ADD_ORDER' && last.item.receiptId) {
-    message = `ยกเลิก ${removedCount} จานของ UID ${last.item.uid || 'ไม่ระบุ'} แล้ว`;
-  } else if (last.action === 'SERVE_ORDER' && removedCount > 1) {
-    message = `คืน ${removedCount} จานของ UID ${last.item.uid || 'ไม่ระบุ'} เข้าคิวแล้ว`;
-  } else if (last.action === 'CANCEL_ORDER') {
-    message = `คืน ${removedCount} จานของ UID ${last.item.uid || 'ไม่ระบุ'} เข้าคิวแล้ว`;
-  } else {
-    message = `ยกเลิกการ ${last.action} ของ UID ${last.item.uid || 'ไม่ระบุ'} แล้ว`;
-  }
-  res.json({ message, size: orderQueue.size() });
+  return res.json({ message: 'ย้อนกลับรายการล่าสุดแล้ว', size: orderQueue.length });
 });
 
-// ---------------------------------------------------------------------
-// เริ่มโหลดเมนูทันที (ไม่ต้องรอ .then() ก่อน export — สำคัญสำหรับ Vercel serverless)
-loadMenu();
+app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
+  const status = Number(err.status) || 500;
+  if (status >= 500) console.error(err);
+  return res.status(status).json({ error: status === 500 ? 'เกิดข้อผิดพลาดในเซิร์ฟเวอร์' : err.message });
+});
 
-// รันแบบ local server ปกติ (เช่น `node server.js` บนเครื่องตัวเอง)
-// บน Vercel ตัว app.listen() นี้จะไม่ถูกใช้งาน (Vercel เรียก handler ผ่าน module.exports แทน)
-if (require.main === module) {
-  app.listen(PORT, () => console.log(`🍔 Food System Server running: http://localhost:${PORT}`));
+app.use((req, res) => res.status(404).json({ error: 'ไม่พบ endpoint นี้' }));
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  app.listen(PORT, () => console.log(`Teyvat Kitchen API running at http://localhost:${PORT}`));
 }
 
-// จำเป็นสำหรับ Vercel: ให้ @vercel/node ดึง Express app ไปใช้เป็น serverless function handler
-module.exports = app;
+export default app;

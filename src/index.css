@@ -1,0 +1,27 @@
+:root {
+  --yellow: #ffd500;
+  --yellow-d: #c9a600;
+  --brown: #54410f;
+  --brown-d: #3b2d08;
+  --cream: #fff9e1;
+  --beige: #f3ecd6;
+  --orange: #ff6100;
+  --red: #b3321f;
+  --muted: #8a7a4d;
+  --shadow: 0 8px 22px rgba(84, 65, 15, 0.18);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--brown);
+  font-family: 'Kanit', system-ui, sans-serif;
+  min-height: 100vh;
+}
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+h1, h2, h3, h4, p { margin: 0; }
+:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
