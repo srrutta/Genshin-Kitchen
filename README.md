@@ -1,38 +1,25 @@
 # Teyvat Kitchen
 
-ระบบสั่งอาหารธีม Genshin พัฒนาด้วย React, Vite และ Express โดยอ้างอิงหน้าจอใน `Genshin Kitchen.pdf` และ flow/API ใน `DSA Project Guide.pdf`
+ระบบสั่งอาหารธีม Genshin พัฒนาด้วย React, Vite และ Express มีหน้าเลือกร้านและเมนู ตะกร้าแบบ Pop-up หน้า Checkout และหน้าติดตามออเดอร์
 
-## เริ่มใช้งาน
+## ตารางส่วนร่วม
 
-ติดตั้ง dependencies ครั้งแรกจากโฟลเดอร์โปรเจกต์:
+| ชื่อ | รหัสนักศึกษา | งานที่รับผิดชอบ | ช่วงที่นำเสนอในคลิป |
+| --- | --- | --- | --- |
+| นางสาวกันติญา โพธิ์เอี่ยม | 681310002 | ออกแบบและปรับปรุง Feature/UX ใน React: HomePage, LoginPage, MenuPage, OrderTrackPage และ RestauMenuPage | 123 |
+| นางสาวพิมพ์ศรุตา ทองเก่า | 681310020 | Express, DSA และ Graph flow; CheckoutPage และ `server.js` | 123 |
 
-```bash
-npm install
-```
+## ตารางข้อแนะนำจากงานแรก → สิ่งที่แก้
 
-เปิด Terminal 2 หน้าต่างใน VS Code โดยให้ทั้งคู่อยู่ที่โฟลเดอร์โปรเจกต์:
+| ข้อแนะนำจากงานแรก | สิ่งที่แก้ในงาน | หลักฐาน Before / After |
+| --- | --- | --- |
+| ปรับ Order และ Queue ให้เป็น Pop Up แทนหน้า Page แยก | เปลี่ยนหน้า Order เป็น Pop up สำหรับยืนยันการสั่งอาหาร ส่วน Queue ยังเป็นหน้าแยก เพื่อแสดงรายการที่สั่งในรอบปัจจุบันและประวัติ Order ที่เคยสั่งไว้ | Img |
+| ดึงข้อมูลจาก API นำมาใช้ให้มากกว่านี้ อย่างการเพิ่ม Effect ของ Item ระดับความ Rarity การแยกประเภท Effect | ดึงข้อมูลจาก API เพิ่มเติม แล้วนำไปเพิ่มในข้อมูลอาหารเดิมของแต่ละรายการ ได้แก่ ประเภทของ Effect, Effect ของอาหารจานนั้น และระดับ Rarity | img |
+| เพิ่ม Sort แยก | เพิ่มตัวเลือกเรียงลำดับ Sort แยกตาม Effect และ Rarity เพื่อให้ผู้ใช้ค้นหาอาหารที่ต้องการได้ง่ายขึ้น | img |
+| ปรับ Queue Stack > กดแล้วสามารถเห็นว่าสั่งอะไรไปบ้าง > กดยกเลิก หรือปรับเมนูได้ | ในหน้ายืนยันการสั่งอาหารและหน้ารออาหาร ผู้ใช้กดดูรายการอาหารในแต่ละออเดอร์ได้ เพื่อตรวจสอบว่าตรงกับที่สั่งหรือไม่ | img |
+| ในมือถือมีเมนูเยอะเกินไป ควรปรับให้แต่ละหน้ามีกี่เมนูแบบจำกัด และเลื่อนไปหน้าถัดไปได้ | เพิ่มตัวเลือก Sort ที่ละเอียดขึ้น และแสดงรายละเอียดของร้านให้ชัดเจน ผู้ใช้จึงโฟกัสเมนูที่สนใจได้ภายในหน้าจอเดียว โดยไม่ต้องเลื่อนดูเมนูจำนวนมาก | img |
 
-1. Terminal แรก: `npm run server` — เริ่ม Express API ที่ `http://localhost:3000` และปล่อยให้ทำงานค้างไว้
-2. Terminal ที่สอง: `npm run dev` — เริ่ม React/Vite; เปิด URL ที่แสดงใน Terminal (ปกติคือ `http://localhost:5173`)
-
-Vite proxy `/api`, `/images` และ `/shop-images` ไปยัง Express อัตโนมัติ จึงต้องเปิด server ควบคู่กันระหว่างพัฒนา
-
-สำหรับรัน production build ในเครื่อง ให้ใช้ `npm run build` แล้ว `npm run server`; จากนั้นเปิด `http://localhost:3000`. `vercel.json` ตั้งค่า static build และ Express API แยก route ไว้แล้ว
-
-หากพอร์ต 3000 หรือ 5173 ถูกใช้งานอยู่ ให้ปิดโปรแกรมเดิมที่ใช้พอร์ตนั้นก่อนเริ่มใหม่
-
-```bash
-npm test
-npm run lint
-```
-
-## ข้อมูลและรูปภาพ
-
-- Express ใช้ `menu.json` ที่แนบมากับโปรเจกต์เป็นแหล่งข้อมูลรายการอาหาร ราคา วัตถุดิบ และร้าน; ข้อมูลเหล่านี้ยังไม่ได้ตรวจยืนยันกับแหล่งทางการ
-- รูปอาหารใน `genshin-food/` ให้บริการผ่าน `/images/` และนำไปแสดงทั้งหน้า MENU, หน้าร้าน และรายละเอียดอาหาร
-- ภาพร้านใน `genshin-shop/` ให้บริการผ่าน `/shop-images/` และจับคู่กับชื่อร้านที่มีภาพ; ร้านที่ไม่มีภาพเฉพาะจะใช้ภาพอาหารจานแรกแทน
-- `menu.json` มีข้อมูล Effect และความแรร์ที่เติมจาก Genshin-DB; `node scripts/enrich-menu.mjs` จะเติมเฉพาะฟิลด์ที่ยังไม่มีและข้ามรายการที่กำหนดไว้ใน `scripts/name-map.json`
-- รายการ Landmark ยังอยู่ใน `src/data.js` เพราะไม่มีใน `menu.json`; ควรยืนยันกับแหล่งข้อมูลเกมก่อนใช้เป็นข้อมูลจริง
+ปล. ใช้คอมพิวเตอร์เครื่องเดียวในการทำ ทำให้ History ใน Github จึงมีแค่คนเดียวที่ Update
 
 ## API หลัก
 
@@ -43,7 +30,7 @@ npm run lint
 | GET | `/api/restaurants/:id/menu` | เมนูร้านและเมนูประจำวัน |
 | POST | `/api/login` | ตรวจ UID, Nation และ Landmark |
 | POST | `/api/orders` | ตรวจรายการและคำนวณยอดจากเมนูฝั่ง server |
-| GET | `/api/orders?uid=...` | สถานะออเดอร์ที่ server คำนวณ |
+| GET | `/api/orders?uid=...` | รายการและสถานะออเดอร์ของ UID |
 | PATCH | `/api/orders/:id/cancel` | ยกเลิก Pending/Accepted; คืน `409` เมื่อยกเลิกไม่ได้ |
 
 สถานะ Pending (20s), Accepted (10s), Preparing (25s), Leading (ตาม ETA) คำนวณที่ Express; OrderTrack polling สถานะจาก server ส่วนคิวเสิร์ฟและ Undo เดิมยังคงมี endpoint `/orders`, `/history` และ `/undo` แต่ไม่อยู่ใน flow UI ตาม Guide ออเดอร์ปัจจุบันเก็บใน memory ของ Express process และจะไม่คงอยู่หลัง server restart
@@ -52,8 +39,9 @@ npm run lint
 
 | โครงสร้าง | ใช้ที่ |
 | --- | --- |
-| Insertion Sort | ตัวกรองร้านและเมนู |
+| Insertion Sort | เรียงร้านและเมนู |
 | Hash Table | ค้นหาร้าน/เมนูบนหน้าแรก |
 | Priority Queue (Min-Heap) | หาออเดอร์ที่จะถึงก่อนใน OrderTrack |
-| Stack | Previous Page |
 | Graph (`FLOW`) | ควบคุมเส้นทาง HOME, MENU, ร้าน, Checkout และ OrderTrack |
+
+
