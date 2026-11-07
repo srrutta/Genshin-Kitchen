@@ -2,14 +2,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { CATEGORIES, EFFECTS, fetchAllMenu, NATIONS, NATION_ORDER } from '../data.js';
 import { insertionSort } from '../graph.js';
 
-export default function MenuPage({ onOpenRestaurant }) {
+export default function MenuPage({ onOpenRestaurant, initialCategory = 'all', initialEffect = 'all' }) {
   const [dishes, setDishes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [reloadKey, setReloadKey] = useState(0);
   const [keyword, setKeyword] = useState('');
-  const [category, setCategory] = useState('all');
-  const [effect, setEffect] = useState('all');
+  const [category] = useState(initialCategory);
+  const [effect] = useState(initialEffect);
   const [nation, setNation] = useState('all');
 
   useEffect(() => {
@@ -31,7 +31,11 @@ export default function MenuPage({ onOpenRestaurant }) {
     setReloadKey((key) => key + 1);
   };
 
-  const hasEffects = dishes.some((dish) => dish.effect);
+  const categoryLabel = category === 'all'
+    ? effect === 'all'
+      ? 'ALL'
+      : EFFECTS.find((item) => item.id === effect)?.label.toUpperCase() ?? 'ALL'
+    : CATEGORIES.find((item) => item.id === category)?.label.toUpperCase() ?? 'ALL';
   const visible = useMemo(() => {
     const query = keyword.trim().toLowerCase();
     const filtered = dishes.filter((dish) =>
@@ -46,11 +50,10 @@ export default function MenuPage({ onOpenRestaurant }) {
     <main className="page menu-page">
       <header className="menu-page-head">
         <div>
-          <p className="eyebrow">TEYVAT KITCHEN</p>
           <h2 className="section-title">MENU</h2>
         </div>
         <label className="catalog-search">
-          <span aria-hidden="true">⌕</span>
+          <span className="search-icon" aria-hidden="true" />
           <input
             value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
@@ -60,33 +63,12 @@ export default function MenuPage({ onOpenRestaurant }) {
         </label>
       </header>
 
-      <div className="catalog-filters">
-        <div className="effect-row" role="group" aria-label="ประเภทอาหาร">
-          <button type="button" className={`effect-chip ${category === 'all' ? 'on' : ''}`} onClick={() => setCategory('all')}>All</button>
-          {CATEGORIES.map((item) => (
-            <button key={item.id} type="button" className={`effect-chip ${category === item.id ? 'on' : ''}`} onClick={() => setCategory(item.id)}>
-              {item.icon} {item.label}
-            </button>
-          ))}
-        </div>
-        <div className="effect-row" role="group" aria-label="Effect">
-          {EFFECTS.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              className={`effect-chip ${effect === item.id ? 'on' : ''}`}
-              disabled={!hasEffects}
-              onClick={() => setEffect(effect === item.id ? 'all' : item.id)}
-            >
-              {item.icon} {item.label}
-            </button>
-          ))}
-          {!hasEffects && <span className="hint">ยังไม่มีข้อมูล Effect ใน menu.json</span>}
-        </div>
+      <div className="catalog-category-bar">
+        <h2>{categoryLabel}</h2>
         <label className="catalog-nation">
-          <span>Nation</span>
+          <span>NATION :</span>
           <select value={nation} onChange={(event) => setNation(event.target.value)}>
-            <option value="all">ทุกเมือง</option>
+            <option value="all">all</option>
             {NATION_ORDER.map((id) => <option key={id} value={id}>{NATIONS[id].name}</option>)}
           </select>
         </label>

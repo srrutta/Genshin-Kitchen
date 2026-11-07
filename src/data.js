@@ -1,14 +1,14 @@
 export const NATION_ORDER = ['mondstadt', 'liyue', 'inazuma', 'sumeru', 'fontaine', 'natlan', 'nodkrai', 'snezhnaya'];
 
 export const NATIONS = {
-  mondstadt: { name: 'Mondstadt', landmarks: ['Windrise', 'Favonius Cathedral', 'Mondstadt Harbor', 'Knights of Favonius HQ'] },
-  liyue: { name: 'Liyue', landmarks: ['Liyue Harbor', 'Qingce Village', 'Wangshu Inn Terrace', 'Jueyun Karst'] },
-  inazuma: { name: 'Inazuma', landmarks: ['Inazuma City', 'Tenshukaku', 'Konda Village', 'Narukami Island'] },
-  sumeru: { name: 'Sumeru', landmarks: ['Sumeru City', 'Vanarana', 'Aaru Village', 'Gandharva Ville'] },
-  fontaine: { name: 'Fontaine', landmarks: ['Court of Fontaine', 'Opera Epiclese', 'Romaritime Harbor', 'Poisson'] },
-  natlan: { name: 'Natlan', landmarks: ['Flower-Feather Clan', 'Masters of the Night-Wind', 'Scarlet Sand Slope', 'Springs of the First Dawn'] },
-  nodkrai: { name: 'NodKrai', landmarks: ['Flagship Dock', 'Frostmoon Plaza', 'Memory Harbor'] },
-  snezhnaya: { name: 'Snezhnaya', landmarks: ['Zapolyarny Palace', 'Podvorye Square', 'Northern Market'] },
+  mondstadt: { name: 'Mondstadt', landmarks: ['Mondstadt City', 'Springvale', 'Dawn Winery', 'Dornman Port'] },
+  liyue: { name: 'Liyue', landmarks: ['Liyue Harbor', 'Qingce Village', 'Qiaoying Village', 'Wangshu Inn', 'Mingyun Village', 'Yilong Wharf'] },
+  inazuma: { name: 'Inazuma', landmarks: ['Inazuma City', 'Ritou', 'Kando Village', 'Bourou Village', 'Kujou Encampment', 'Higi Village'] },
+  sumeru: { name: 'Sumeru', landmarks: ['Sumeru City', 'Aaru Village', 'Gandharva Ville', 'Port Ormos', 'Vimara Village', 'Caravan Ribat', 'Bayda Harbor'] },
+  fontaine: { name: 'Fontaine', landmarks: ['Court of Fontaine', 'Merusee Village', 'Poisson', 'Petrichor City', 'Fontaine Research Istitue of Kinetic Energy Engineering', 'Lumidouce Port'] },
+  natlan: { name: 'Natlan', landmarks: ['Stadium of the Sacred Flame', 'Children of Echoes', 'People of the Springs', 'Scions of the Canopy', 'Masters of the Night Wind', 'Flower Feather Clan', 'Collective of Plenty', 'Easybreeze Merket', 'Brewblossom Stores', 'Wavey Bay', 'Villa Guiztil'] },
+  nodkrai: { name: 'NodKrai', landmarks: ['Nasha Town', 'Rossum Workshop', 'Mimisbrunr Books', 'Curutarium of Secrets', 'Speranza', 'Voynich Giuld', 'Krumkake Craftshop', 'Blue Amber Lake', 'Frostmoon Enclave', 'Kuuvahki Experimental Design Bereau', 'Final Night Cemetery']},
+  snezhnaya: { name: 'Snezhnaya', landmarks: ['Zapolyary Palace', 'Adventurer\'s Guild', 'Central Station', 'The Korolevskiy Theater', 'Torchlight Books', 'Morepesok', 'Svetloledovka', 'Sretomorozsk', 'Glupov', 'Huntsman\'s Cabin', 'House of Hesperides', 'Pale Crown Palace'] },
 };
 
 export const TYPES = {
@@ -19,7 +19,7 @@ export const TYPES = {
 
 export const CATEGORIES = [
   { id: 'main', label: 'Main', icon: '🍽️' },
-  { id: 'sweet', label: 'Sweet', icon: '🍰' },
+  { id: 'dessert', label: 'Dessert', icon: '🍰' },
   { id: 'drink', label: 'Drink', icon: '🥤' },
 ];
 

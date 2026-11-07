@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import RestaurantCard from '../components/RestaurantCard.jsx';
 import HPSortPopup, { NO_SORT, isSorted } from '../components/HPSortPopup.jsx';
-import { NATION_ORDER, fetchRestaurants } from '../data.js';
+import { CATEGORIES, EFFECTS, NATION_ORDER, fetchRestaurants } from '../data.js';
 import { buildSearchIndex, canNavigate, insertionSort, searchIndex } from '../graph.js';
 
 const byName = (a, b) => a.name.localeCompare(b.name);
@@ -16,7 +16,7 @@ function Skeletons({ count = 10 }) {
   );
 }
 
-export default function HomePage({ user, favorites, onToggleFav, onOpenRestaurant }) {
+export default function HomePage({ user, favorites, onToggleFav, onOpenRestaurant, onOpenCatalog }) {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -100,7 +100,7 @@ export default function HomePage({ user, favorites, onToggleFav, onOpenRestauran
     <>
       <section className="search-strip">
         <form className="searchbar" onSubmit={(e) => { e.preventDefault(); setQuery(keyword); }} role="search">
-          <span aria-hidden="true">🔍</span>
+          <span className="search-icon" aria-hidden="true" />
           <input
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
@@ -115,6 +115,21 @@ export default function HomePage({ user, favorites, onToggleFav, onOpenRestauran
           </button>
         )}
       </section>
+      <nav className="home-categories" aria-label="ค้นหาอาหารตามประเภทหรือ Effect">
+        <button type="button" className="home-category" onClick={() => onOpenCatalog({ category: 'all', effect: 'all' })}>
+          <span aria-hidden="true">🍴</span>All
+        </button>
+        {CATEGORIES.map((item) => (
+          <button key={item.id} type="button" className="home-category" onClick={() => onOpenCatalog({ category: item.id, effect: 'all' })}>
+            <span aria-hidden="true">{item.icon}</span>{item.label}
+          </button>
+        ))}
+        {EFFECTS.map((item) => (
+          <button key={item.id} type="button" className="home-category" onClick={() => onOpenCatalog({ category: 'all', effect: item.id })}>
+            <span aria-hidden="true">{item.icon}</span>{item.label}
+          </button>
+        ))}
+      </nav>
 
       <main className="page">
         {error ? (

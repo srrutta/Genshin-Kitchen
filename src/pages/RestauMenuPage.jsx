@@ -63,7 +63,8 @@ export default function RestauMenuPage({
       title: c.label.toUpperCase(),
       dishes: filterSort(activeMenu.dishes.filter((d) => d.category === c.id)),
     }));
-    return [{ key: 'today', title: 'TODAY MENU', dishes: today }, ...rest].filter((s) => s.dishes.length > 0); // ซ่อน Category ที่ว่าง
+    const sections = effect === 'all' ? [{ key: 'today', title: 'TODAY MENU', dishes: today }] : [];
+    return [...sections, ...rest].filter((s) => s.dishes.length > 0);
   }, [activeMenu, effect]);
 
   if (!restaurant) {

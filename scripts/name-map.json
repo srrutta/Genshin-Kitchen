@@ -1,0 +1,19 @@
+{
+  "_comment": "menu.json name -> genshin-db English name. Use null to skip a dish. Matching is already case/punctuation/accent-insensitive, so only add entries the report lists as unmatched.",
+  "Fonta": null,
+  "Sakura Shrimp Crackers": "Sakura Mochi",
+  "Pile 'Em Up": "Pile 'Em Up",
+  "DryBraised Salted Fish": "Dry-Braised Salted Fish",
+  "Wolfhook Juice": null,
+  "Berry & Mint Burst": null,
+  "Apple Cider": null,
+  "Sparkling Berry Juice": null,
+  "Pop's Teas": null,
+  "Special Mushroom Pizza": "Mushroom Pizza",
+  "Piramida Nightingale": null,
+  "Frontier Land": null,
+  "Wildberry Trail": null,
+  "Kvass": null,
+  "Spiced Honey Brew": null,
+  "Glacial Starbrew": null
+}

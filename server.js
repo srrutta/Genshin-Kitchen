@@ -10,28 +10,82 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const MENU_SOURCE = JSON.parse(fs.readFileSync(path.join(__dirname, 'menu.json'), 'utf8'));
 const IMAGE_DIR = path.join(__dirname, 'genshin-food');
+const SHOP_IMAGE_DIR = path.join(__dirname, 'genshin-shop');
 const DIST_DIR = path.join(__dirname, 'dist');
+const restaurantImages = new Map([
+  ["Angel's Share", 'Angel-Shear.webp'],
+  ["Ashpazi's Homemade", 'Ashpazi.webp'],
+  ["Azalai's Merchat", 'Azalai.webp'],
+  ['Café Lutece', 'Cafe_Lutece.webp'],
+  ['Emerald Maple Inn', 'Emerald_Maple_Inn.webp'],
+  ['Good Hunter', 'Good-Hunter.webp'],
+  ['Hotel Debord', 'Hotel_Debord.webp'],
+  ["Jahangir's Delights", 'Jahangir.webp'],
+  ["Jut's Spice Shop", 'Jut.webp'],
+  ['Kiminami Restaurant', 'Kiminami_Restaurant.webp'],
+  ['Kvasnik', 'Kvasnik.webp'],
+  ["Lambad's Tavern", "Lambad's_Tavern.webp"],
+  ['Lianfang Dim Sum', 'Lianfang_Dim_Sum.webp'],
+  ["Limppu's Cart", 'Limppu.webp'],
+  ['Liuli Pavilion', 'Liuli_Pavilion.webp'],
+  ['Podvorye Restaurant', 'Podvorye_Restaurant.webp'],
+  ["Pops Kai's Tea", 'Pops_Kai.webp'],
+  ['Puspa Café', 'Puspa_Cafe.webp'],
+  ['Restaurant Zorya', 'Restaurant_Zorya.webp'],
+  ["Ryouko's Street Food", 'Ryouko.webp'],
+  ["Shimura's", "Shimura's.webp"],
+  ['Snack Shop', 'Snack_Shop.webp'],
+  ['Speranza', 'Sperenza.webp'],
+  ['The Flagship', 'The_Flagship.webp'],
+  ['Wangshu Inn', 'Wangshu_Inn.webp'],
+  ['Wanmin Restaurant', 'Wanmin-Restaurant.webp'],
+  ['Xinyue Kiosk', 'Xinyue_Kiosk.webp'],
+  ["Zakan's Street Bites", "Zakan's Street Bites.webp"],
+]);
 
 app.use(express.json({ limit: '100kb' }));
 app.use('/images', express.static(IMAGE_DIR));
+app.use('/shop-images', express.static(SHOP_IMAGE_DIR));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(DIST_DIR));
+
+for (const [restaurant, image] of restaurantImages) {
+  if (!fs.existsSync(path.join(SHOP_IMAGE_DIR, image))) {
+    throw new Error(`Missing shop image for ${restaurant}: ${image}`);
+  }
+}
 
 const nationId = (name) => Object.keys(NATIONS).find((id) => NATIONS[id].name.toLowerCase() === name.toLowerCase()) ?? 'other';
 const slug = (value) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const restaurantTypes = new Map([
   ["Angel's Share", 'cafe'],
-  ["Pops Kai's Tea", 'cafe'],
-  ['Puspa Café', 'cafe'],
-  ["Jut's Spice Shop", 'cafe'],
-  ['Café Lutece', 'cafe'],
-  ['Kvasnik', 'cafe'],
-  ['Lianfang Dim Sum', 'street'],
-  ["Ryouko's Street Food", 'street'],
-  ["Jahangir's Delights", 'street'],
+  ["Ashpazi's Homemade", 'street'],
   ["Azalai's Merchat", 'street'],
-  ["Zakan's Street Bites", 'street'],
+  ['Café Lutece', 'cafe'],
+  ['Emerald Maple Inn', 'restaurant'],
+  ['Good Hunter', 'restaurant'],
+  ['Hotel Debord', 'restaurant'],
+  ["Jahangir's Delights", 'street'],
+  ["Jut's Spice Shop", 'street'],
+  ['Kiminami Restaurant', 'restaurant'],
+  ['Kvasnik', 'cafe'],
+  ["Lambad's Tavern", 'restaurant'],
+  ['Lianfang Dim Sum', 'street'],
   ["Limppu's Cart", 'street'],
+  ['Liuli Pavilion', 'restaurant'],
+  ['Podvorye Restaurant', 'restaurant'],
+  ["Pops Kai's Tea", 'street'],
+  ['Puspa Café', 'cafe'],
+  ['Restaurant Zorya', 'restaurant'],
+  ["Ryouko's Street Food", 'street'],
+  ["Shimura's", 'restaurant'],
+  ['Snack Shop', 'cafe'],
+  ['Speranza', 'restaurant'],
+  ['The Flagship', 'restaurant'],
+  ['Wangshu Inn', 'restaurant'],
+  ['Wanmin Restaurant', 'restaurant'],
+  ['Xinyue Kiosk', 'restaurant'],
+  ["Zakan's Street Bites", 'street'],
 ]);
 
 const restaurantsById = new Map();
@@ -62,10 +116,13 @@ for (const item of MENU_SOURCE) {
     name: item.name,
     price: Number(item.price),
     image: imageExists ? `/images/${encodeURIComponent(path.basename(item.image))}` : null,
-    category: item.type === 'Drink' ? 'drink' : item.type === 'Dessert' ? 'sweet' : 'main',
+    category: item.type === 'Drink' ? 'drink' : item.type === 'Dessert' ? 'dessert' : 'main',
     effect: item.effect ?? null,
     effectDescription: item.effectDescription ?? item.description ?? null,
     ingredients: Array.isArray(item.ingredients) ? item.ingredients : [],
+    rarity: Number.isInteger(item.rarity) ? item.rarity : null,
+    foodType: item.foodType ?? null,
+    foodFilter: item.foodFilter ?? null,
     restaurantId,
     restaurantName: item.restaurant,
     nation,
@@ -79,6 +136,10 @@ for (const item of MENU_SOURCE) {
 }
 
 const restaurants = [...restaurantsById.values()];
+for (const restaurant of restaurants) {
+  const image = restaurantImages.get(restaurant.name);
+  if (image) restaurant.coverImage = `/shop-images/${encodeURIComponent(image)}`;
+}
 const dishesByRestaurant = new Map(
   restaurants.map((restaurant) => [restaurant.id, dishes.filter((dish) => dish.restaurantId === restaurant.id)]),
 );

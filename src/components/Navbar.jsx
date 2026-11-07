@@ -14,9 +14,8 @@ export default function Navbar({ page, user, activeOrders, onNavigate, onHome, o
     return () => clearInterval(t);
   }, []);
 
-  const showHome = canNavigate(page, 'home');
-  const showMenu = page === 'catalog' || canNavigate(page, 'catalog');
-  const showOrders = Boolean(user) && canNavigate(page, 'orders');
+  const showHome = page === 'home' || canNavigate(page, 'home');
+  const showOrders = page !== 'orders' && Boolean(user) && canNavigate(page, 'orders');
   const showLogin = canNavigate(page, 'login');
   const showBack = canNavigate(page, 'previous');
 
@@ -35,9 +34,6 @@ export default function Navbar({ page, user, activeOrders, onNavigate, onHome, o
         <nav className="nav-links" aria-label="เมนูหลัก">
           {showHome && (
             <button type="button" className={`nav-link ${page === 'home' ? 'active' : ''}`} onClick={onHome}>HOME</button>
-          )}
-          {showMenu && (
-            <button type="button" className={`nav-link ${page === 'catalog' ? 'active' : ''}`} onClick={() => page !== 'catalog' && onNavigate('catalog')}>MENU</button>
           )}
           {showOrders && (
             <button type="button" className={`nav-link ${page === 'orders' ? 'active' : ''}`} onClick={() => onNavigate('orders')}>

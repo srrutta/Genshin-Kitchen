@@ -15,6 +15,7 @@ import { cancelOrder as cancelOrderRequest, createOrder, fetchOrders, findUnavai
 
 const HOME = { name: 'home', params: {} };
 const EMPTY_CART = { restaurantId: null, restaurantName: '', restaurantNation: null, items: [] };
+const APP_HISTORY_KEY = 'teyvat-kitchen';
 
 // โหลดข้อมูลฝั่ง UI จาก localStorage; สถานะออเดอร์อ่านจาก Express
 const load = (key, fallback) => {
@@ -28,23 +29,66 @@ const load = (key, fallback) => {
 const save = (key, value) => {
   try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* ignore */ }
 };
+const loadSessionUser = () => {
+  try {
+    const raw = sessionStorage.getItem('tk-user');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+const saveSessionUser = (user) => {
+  try { sessionStorage.setItem('tk-user', JSON.stringify(user)); } catch { /* ignore */ }
+};
 
 export default function App() {
-  const [user, setUser] = useState(() => load('tk-user', null));
+  const [user, setUser] = useState(loadSessionUser);
   const [cart, setCart] = useState(() => load('tk-cart-v2', EMPTY_CART));
   const [favorites, setFavorites] = useState(() => load('tk-favs-v2', []));
   const [orders, setOrders] = useState([]);
 
   const [page, setPage] = useState(HOME);
   const previousPages = useRef(new Stack()); // Stack: Previous Page
+  const historyInitialized = useRef(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [toast, setToast] = useState('');
   const toastTimer = useRef(0);
 
-  useEffect(() => save('tk-user', user), [user]);
+  useEffect(() => saveSessionUser(user), [user]);
+  useEffect(() => {
+    try { localStorage.removeItem('tk-user'); } catch { /* ignore */ }
+  }, []);
   useEffect(() => save('tk-cart-v2', cart), [cart]);
   useEffect(() => save('tk-favs-v2', favorites), [favorites]);
   useEffect(() => () => clearTimeout(toastTimer.current), []);
+
+  useEffect(() => {
+    const appUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (!historyInitialized.current) {
+      window.history.replaceState({ app: APP_HISTORY_KEY, sentinel: true }, '', appUrl);
+      window.history.pushState({ app: APP_HISTORY_KEY, page: HOME, previous: [] }, '', appUrl);
+      historyInitialized.current = true;
+    }
+
+    const handlePopState = (event) => {
+      if (event.state?.app !== APP_HISTORY_KEY) return;
+      if (event.state.sentinel) {
+        previousPages.current.clear();
+        setPage(HOME);
+        setCartOpen(false);
+        window.history.pushState({ app: APP_HISTORY_KEY, page: HOME, previous: [] }, '', appUrl);
+      } else if (event.state.page?.name) {
+        previousPages.current.clear();
+        (event.state.previous ?? []).forEach((previousPage) => previousPages.current.push(previousPage));
+        setPage(event.state.page);
+        setCartOpen(false);
+      }
+      window.scrollTo(0, 0);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const showToast = useCallback((message) => {
     setToast(message);
@@ -82,7 +126,13 @@ export default function App() {
   const navigate = useCallback((to, params = {}, from = page.name) => {
     if (!canNavigate(from, to)) return false;
     previousPages.current.push(page);
-    setPage({ name: to, params });
+    const nextPage = { name: to, params };
+    window.history.pushState({
+      app: APP_HISTORY_KEY,
+      page: nextPage,
+      previous: previousPages.current.toArray(),
+    }, '', window.location.href);
+    setPage(nextPage);
     setCartOpen(false);
     window.scrollTo(0, 0);
     return true;
@@ -90,15 +140,15 @@ export default function App() {
 
   const goHome = useCallback(() => {
     previousPages.current.clear();
+    window.history.pushState({ app: APP_HISTORY_KEY, page: HOME, previous: [] }, '', window.location.href);
     setPage(HOME);
     setCartOpen(false);
     window.scrollTo(0, 0);
   }, []);
 
   const goBack = useCallback(() => {
-    const prev = previousPages.current.pop();
-    if (prev) { setPage(prev); window.scrollTo(0, 0); } else goHome();
-  }, [goHome]);
+    window.history.back();
+  }, []);
 
   // ---------- Auth ----------
   const handleLogin = (profile) => {
@@ -233,6 +283,8 @@ export default function App() {
     case 'catalog':
       content = (
         <MenuPage
+          initialCategory={page.params.category}
+          initialEffect={page.params.effect}
           onOpenRestaurant={(restaurantId, dishId) => navigate('menu', { restaurantId, dishId }, 'catalog')}
         />
       );
@@ -285,6 +337,7 @@ export default function App() {
           favorites={favorites}
           onToggleFav={toggleFav}
           onOpenRestaurant={(restaurantId) => navigate('menu', { restaurantId })}
+          onOpenCatalog={(filters) => navigate('catalog', filters)}
         />
       );
   }

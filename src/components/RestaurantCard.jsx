@@ -1,7 +1,7 @@
 import { NATIONS, TYPES, deliveryInfo } from '../data.js';
 
 export default function RestaurantCard({ restaurant, isFav, userNation, onToggleFav, onOpen }) {
-  const eta = userNation
+  const deliveryTime = userNation
     ? `${deliveryInfo(restaurant.nation, userNation).eta} วิ`
     : '15–40 วิ';
   return (
@@ -36,7 +36,7 @@ export default function RestaurantCard({ restaurant, isFav, userNation, onToggle
         <h3>{restaurant.name}</h3>
         <div className="rest-meta">
           <span>{TYPES[restaurant.type].label}</span>
-          <span>⏱ ETA {eta}</span>
+          <span>◴ {deliveryTime}</span>
         </div>
       </div>
     </article>

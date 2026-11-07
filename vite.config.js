@@ -7,6 +7,7 @@ export default defineConfig({
     proxy: {
       '/api': 'http://localhost:3000',
       '/images': 'http://localhost:3000',
+      '/shop-images': 'http://localhost:3000',
     },
   },
   test: { include: ['tests/**/*.test.js'] },

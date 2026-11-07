@@ -3,9 +3,9 @@ import Modal from '../components/Modal.jsx';
 import { NATIONS, deliveryInfo, formatMora } from '../data.js';
 
 const METHODS = [
-  { id: 'bank', label: 'โอนผ่านธนาคาร', icon: '🏦' },
-  { id: 'promptpay', label: 'พร้อมเพย์ (QR)', icon: '📱' },
-  { id: 'cod', label: 'ชำระปลายทาง', icon: '💵' },
+  { id: 'bank', label: 'โอนผ่านธนาคาร Northbank'},
+  { id: 'promptpay', label: 'พร้อมเพย์ (QR)'},
+  { id: 'cod', label: 'ชำระปลายทาง'},
 ];
 
 export default function CheckOutPage({ cart, user, onPlaceOrder, onEmptyCart, showToast }) {
