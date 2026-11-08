@@ -22,6 +22,7 @@ export default function DishCard({ dish, qty, onAdd, onChange, onOpen }) {
       </button>
       <div className="dish-foot">
         <h4>{dish.name}</h4>
+        {dish.genshin?.description && <p className="dish-genshin-description">{dish.genshin.description}</p>}
         <div className="dish-row">
           <span>{formatMora(dish.price)}</span>
           {qty > 0 ? (

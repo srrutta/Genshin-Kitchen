@@ -21,20 +21,6 @@
 
 ปล. ใช้คอมพิวเตอร์เครื่องเดียวในการทำ ทำให้ History ใน Github จึงมีแค่คนเดียวที่ Update
 
-## API หลัก
-
-| Method | Endpoint | หน้าที่ |
-| --- | --- | --- |
-| GET | `/api/restaurants` | ร้านสำหรับหน้าแรก |
-| GET | `/api/menu` | เมนูรวมสำหรับหน้า MENU |
-| GET | `/api/restaurants/:id/menu` | เมนูร้านและเมนูประจำวัน |
-| POST | `/api/login` | ตรวจ UID, Nation และ Landmark |
-| POST | `/api/orders` | ตรวจรายการและคำนวณยอดจากเมนูฝั่ง server |
-| GET | `/api/orders?uid=...` | รายการและสถานะออเดอร์ของ UID |
-| PATCH | `/api/orders/:id/cancel` | ยกเลิก Pending/Accepted; คืน `409` เมื่อยกเลิกไม่ได้ |
-
-สถานะ Pending (20s), Accepted (10s), Preparing (25s), Leading (ตาม ETA) คำนวณที่ Express; OrderTrack polling สถานะจาก server ส่วนคิวเสิร์ฟและ Undo เดิมยังคงมี endpoint `/orders`, `/history` และ `/undo` แต่ไม่อยู่ใน flow UI ตาม Guide ออเดอร์ปัจจุบันเก็บใน memory ของ Express process และจะไม่คงอยู่หลัง server restart
-
 ## DSA
 
 | โครงสร้าง | ใช้ที่ |

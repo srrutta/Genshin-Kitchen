@@ -9,6 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "sync:food": "node scripts/sync-genshin-food.js",
     "lint": "oxlint"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.0",
+    "genshin-db": "^5.2.15",
     "oxlint": "^1.0.0",
     "vite": "^7.0.0",
     "vitest": "^5.0.5"

@@ -119,6 +119,7 @@ for (const item of MENU_SOURCE) {
     category: item.type === 'Drink' ? 'drink' : item.type === 'Dessert' ? 'dessert' : 'main',
     effect: item.effect ?? null,
     effectDescription: item.effectDescription ?? item.description ?? null,
+    ...(item.genshin ? { genshin: item.genshin } : {}),
     ingredients: Array.isArray(item.ingredients) ? item.ingredients : [],
     rarity: Number.isInteger(item.rarity) ? item.rarity : null,
     foodType: item.foodType ?? null,

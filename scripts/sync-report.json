@@ -1,0 +1,1955 @@
+{
+  "matched": [
+    {
+      "shopName": "Aaru Mixed Rice",
+      "apiName": "Aaru Mixed Rice"
+    },
+    {
+      "shopName": "Almond Tofu",
+      "apiName": "Almond Tofu"
+    },
+    {
+      "shopName": "Apple Roly Poly",
+      "apiName": "Apple Roly Poly"
+    },
+    {
+      "shopName": "Baklava",
+      "apiName": "Baklava"
+    },
+    {
+      "shopName": "Bathhouse Manjuu",
+      "apiName": "Bathhouse Manjuu"
+    },
+    {
+      "shopName": "Berries and Fried Meat",
+      "apiName": "Berries and Fried Meat"
+    },
+    {
+      "shopName": "Berry Herbal Candy",
+      "apiName": "Berry Herbal Candy"
+    },
+    {
+      "shopName": "Berry Mizu Manjuu",
+      "apiName": "Berry Mizu Manjuu"
+    },
+    {
+      "shopName": "Bird Egg Sushi",
+      "apiName": "Bird Egg Sushi"
+    },
+    {
+      "shopName": "Biryani",
+      "apiName": "Biryani"
+    },
+    {
+      "shopName": "Blazed Meat Stew",
+      "apiName": "Blazed Meat Stew"
+    },
+    {
+      "shopName": "Blubber Profiterole",
+      "apiName": "Blubber Profiterole"
+    },
+    {
+      "shopName": "Borscht",
+      "apiName": "Borscht"
+    },
+    {
+      "shopName": "Borscht",
+      "apiName": "Borscht"
+    },
+    {
+      "shopName": "Boudin Noir aux Pommes",
+      "apiName": "Boudin Noir aux Pommes"
+    },
+    {
+      "shopName": "Braised Meatball",
+      "apiName": "Braised Meatball"
+    },
+    {
+      "shopName": "Bulle Sauce Duck Breast",
+      "apiName": "Bulle Sauce Duck Breast"
+    },
+    {
+      "shopName": "Bulle Souffle",
+      "apiName": "Bulle Souffle"
+    },
+    {
+      "shopName": "Calla Lily Seafood Soup",
+      "apiName": "Calla Lily Seafood Soup"
+    },
+    {
+      "shopName": "Candied Ajilenakh Nut",
+      "apiName": "Candied Ajilenakh Nut"
+    },
+    {
+      "shopName": "Candied Ajilenakh Nut",
+      "apiName": "Candied Ajilenakh Nut"
+    },
+    {
+      "shopName": "Cassoulet",
+      "apiName": "Cassoulet"
+    },
+    {
+      "shopName": "Chenyu Brew",
+      "apiName": "Chenyu Brew"
+    },
+    {
+      "shopName": "Come and Get It",
+      "apiName": "Come and Get It"
+    },
+    {
+      "shopName": "Conch Madeleine",
+      "apiName": "Conch Madeleine"
+    },
+    {
+      "shopName": "Consommé",
+      "apiName": "Consommé"
+    },
+    {
+      "shopName": "Crab Roe Tofu",
+      "apiName": "Crab Roe Tofu"
+    },
+    {
+      "shopName": "Cream of Mushroom Soup",
+      "apiName": "Cream of Mushroom Soup"
+    },
+    {
+      "shopName": "Cream Stew",
+      "apiName": "Cream Stew"
+    },
+    {
+      "shopName": "Crepes Suzette",
+      "apiName": "Crepes Suzette"
+    },
+    {
+      "shopName": "Crepes Suzette",
+      "apiName": "Crepes Suzette"
+    },
+    {
+      "shopName": "Crispy Potato Shrimp Platter",
+      "apiName": "Crispy Potato Shrimp Platter"
+    },
+    {
+      "shopName": "Crispy Roast",
+      "apiName": "Crispy Roast"
+    },
+    {
+      "shopName": "Crystal Shrimp",
+      "apiName": "Crystal Shrimp"
+    },
+    {
+      "shopName": "Cup O' Grainfruit",
+      "apiName": "Cup O' Grainfruit"
+    },
+    {
+      "shopName": "Cured Pork Dry Hotpot",
+      "apiName": "Cured Pork Dry Hotpot"
+    },
+    {
+      "shopName": "Curry Shrimp",
+      "apiName": "Curry Shrimp"
+    },
+    {
+      "shopName": "Dragon Beard Noodles",
+      "apiName": "Dragon Beard Noodles"
+    },
+    {
+      "shopName": "DryBraised Salted Fish",
+      "apiName": "Dry-Braised Salted Fish"
+    },
+    {
+      "shopName": "Duck Confit",
+      "apiName": "Duck Confit"
+    },
+    {
+      "shopName": "Egg Roll",
+      "apiName": "Egg Roll"
+    },
+    {
+      "shopName": "Egg Roll",
+      "apiName": "Egg Roll"
+    },
+    {
+      "shopName": "Fatteh",
+      "apiName": "Fatteh"
+    },
+    {
+      "shopName": "Feast-O's",
+      "apiName": "Feast-O's"
+    },
+    {
+      "shopName": "Fine Tea, Full Moon",
+      "apiName": "Fine Tea, Full Moon"
+    },
+    {
+      "shopName": "Fish and Chips",
+      "apiName": "Fish and Chips"
+    },
+    {
+      "shopName": "Fisherman's Toast",
+      "apiName": "Fisherman's Toast"
+    },
+    {
+      "shopName": "Five Pickled Treasures",
+      "apiName": "Five Pickled Treasures"
+    },
+    {
+      "shopName": "Flaming Red Bolognese",
+      "apiName": "Flaming Red Bolognese"
+    },
+    {
+      "shopName": "Fontaine Aspic",
+      "apiName": "Fontaine Aspic"
+    },
+    {
+      "shopName": "Fontainian Foie Gras",
+      "apiName": "Fontainian Foie Gras"
+    },
+    {
+      "shopName": "Fontainian Onion Soup",
+      "apiName": "Fontainian Onion Soup"
+    },
+    {
+      "shopName": "Fricassee de Poulet",
+      "apiName": "Fricassee de Poulet"
+    },
+    {
+      "shopName": "Fruits of the Festival",
+      "apiName": "Fruits of the Festival"
+    },
+    {
+      "shopName": "Fruit Tandem Turnovers",
+      "apiName": "Fruit Tandem Turnovers"
+    },
+    {
+      "shopName": "Fullmoon Egg",
+      "apiName": "Fullmoon Egg"
+    },
+    {
+      "shopName": "Garlic Baguette",
+      "apiName": "Garlic Baguette"
+    },
+    {
+      "shopName": "Gilded Tajine",
+      "apiName": "Gilded Tajine"
+    },
+    {
+      "shopName": "Glupov Rye Bread",
+      "apiName": "Glupov Rye Bread"
+    },
+    {
+      "shopName": "Glupov Rye Bread",
+      "apiName": "Glupov Rye Bread"
+    },
+    {
+      "shopName": "Golden Crab",
+      "apiName": "Golden Crab"
+    },
+    {
+      "shopName": "Golden Shrimp Balls",
+      "apiName": "Golden Shrimp Balls"
+    },
+    {
+      "shopName": "Grainfruit Meat Soup",
+      "apiName": "Grainfruit Meat Soup"
+    },
+    {
+      "shopName": "Grilled Tiger Fish",
+      "apiName": "Grilled Tiger Fish"
+    },
+    {
+      "shopName": "Grilled Unagi Fillet",
+      "apiName": "Grilled Unagi Fillet"
+    },
+    {
+      "shopName": "Honey Char Siu",
+      "apiName": "Honey Char Siu"
+    },
+    {
+      "shopName": "Ile flottante",
+      "apiName": "Ile flottante"
+    },
+    {
+      "shopName": "Ile flottante",
+      "apiName": "Ile flottante"
+    },
+    {
+      "shopName": "Jadevein Tea Eggs",
+      "apiName": "Jadevein Tea Eggs"
+    },
+    {
+      "shopName": "Jueyun Chili Chicken",
+      "apiName": "Jueyun Chili Chicken"
+    },
+    {
+      "shopName": "Katsu Sandwich",
+      "apiName": "Katsu Sandwich"
+    },
+    {
+      "shopName": "Lakkaberry Madame",
+      "apiName": "Lakkaberry Madame"
+    },
+    {
+      "shopName": "Lakkaberry Pie",
+      "apiName": "Lakkaberry Pie"
+    },
+    {
+      "shopName": "La Lettre a Focalors",
+      "apiName": "La Lettre a Focalors"
+    },
+    {
+      "shopName": "Lambad Fish Roll",
+      "apiName": "Lambad Fish Roll"
+    },
+    {
+      "shopName": "Lasagna",
+      "apiName": "Lasagna"
+    },
+    {
+      "shopName": "Lohikeitto",
+      "apiName": "Lohikeitto"
+    },
+    {
+      "shopName": "Magmic Ode",
+      "apiName": "Magmic Ode"
+    },
+    {
+      "shopName": "Masala Cheese Balls",
+      "apiName": "Masala Cheese Balls"
+    },
+    {
+      "shopName": "Matsutake Meat Rolls",
+      "apiName": "Matsutake Meat Rolls"
+    },
+    {
+      "shopName": "Meatnado",
+      "apiName": "Meatnado"
+    },
+    {
+      "shopName": "Medovik",
+      "apiName": "Medovik"
+    },
+    {
+      "shopName": "Midsommar Torte",
+      "apiName": "Midsommar Torte"
+    },
+    {
+      "shopName": "Mint Jelly",
+      "apiName": "Mint Jelly"
+    },
+    {
+      "shopName": "Mint Salad",
+      "apiName": "Mint Salad"
+    },
+    {
+      "shopName": "Minty Bean Soup",
+      "apiName": "Minty Bean Soup"
+    },
+    {
+      "shopName": "Minty Meat Rolls",
+      "apiName": "Minty Meat Rolls"
+    },
+    {
+      "shopName": "Miso Soup",
+      "apiName": "Miso Soup"
+    },
+    {
+      "shopName": "Mixed Yakisoba",
+      "apiName": "Mixed Yakisoba"
+    },
+    {
+      "shopName": "Mora Meat",
+      "apiName": "Mora Meat"
+    },
+    {
+      "shopName": "Mors",
+      "apiName": "Mors"
+    },
+    {
+      "shopName": "Mushroom Hodgepodge",
+      "apiName": "Mushroom Hodgepodge"
+    },
+    {
+      "shopName": "Mushroom Pizza",
+      "apiName": "Mushroom Pizza"
+    },
+    {
+      "shopName": "Noodles with Mountain Delicacies",
+      "apiName": "Noodles with Mountain Delicacies"
+    },
+    {
+      "shopName": "Noodles with Mountain Delicacies",
+      "apiName": "Noodles with Mountain Delicacies"
+    },
+    {
+      "shopName": "Omelette Rice",
+      "apiName": "Omelette Rice"
+    },
+    {
+      "shopName": "Padisarah Pudding",
+      "apiName": "Padisarah Pudding"
+    },
+    {
+      "shopName": "Panipuri",
+      "apiName": "Panipuri"
+    },
+    {
+      "shopName": "Pate de Fruit",
+      "apiName": "Pate de Fruit"
+    },
+    {
+      "shopName": "Pile 'Em Up",
+      "apiName": "\"Pile 'Em Up\""
+    },
+    {
+      "shopName": "Pita Pocket",
+      "apiName": "Pita Pocket"
+    },
+    {
+      "shopName": "Podvorye Smoked Sausage",
+      "apiName": "Podvorye Smoked Sausage"
+    },
+    {
+      "shopName": "Poisson Seafood Soup",
+      "apiName": "Poisson Seafood Soup"
+    },
+    {
+      "shopName": "Potato Boat",
+      "apiName": "Potato Boat"
+    },
+    {
+      "shopName": "Radish and Fish Stew",
+      "apiName": "Radish and Fish Stew"
+    },
+    {
+      "shopName": "Rainbow Macarons",
+      "apiName": "Rainbow Macarons"
+    },
+    {
+      "shopName": "Rice Buns",
+      "apiName": "Rice Buns"
+    },
+    {
+      "shopName": "Rice Cake Soup",
+      "apiName": "Rice Cake Soup"
+    },
+    {
+      "shopName": "Rimecurrant Ice Cream",
+      "apiName": "Rimecurrant Ice Cream"
+    },
+    {
+      "shopName": "Rose Custard",
+      "apiName": "Rose Custard"
+    },
+    {
+      "shopName": "Sabz Meat Stew",
+      "apiName": "Sabz Meat Stew"
+    },
+    {
+      "shopName": "Sakura Shrimp Crackers",
+      "apiName": "Sakura Shrimp Crackers"
+    },
+    {
+      "shopName": "Samosa",
+      "apiName": "Samosa"
+    },
+    {
+      "shopName": "Sangayaki",
+      "apiName": "Sangayaki"
+    },
+    {
+      "shopName": "Sautéed Matsutake",
+      "apiName": "Sautéed Matsutake"
+    },
+    {
+      "shopName": "Scented Meat Balls",
+      "apiName": "Scented Meat Balls"
+    },
+    {
+      "shopName": "Shawarma Wrap",
+      "apiName": "Shawarma Wrap"
+    },
+    {
+      "shopName": "Snezhnaya Shashliks",
+      "apiName": "Snezhnaya Shashliks"
+    },
+    {
+      "shopName": "Snowball Blooms Atop Snowfields",
+      "apiName": "Snowball Blooms Atop Snowfields"
+    },
+    {
+      "shopName": "Soba Noodles",
+      "apiName": "Soba Noodles"
+    },
+    {
+      "shopName": "Squirrel Fish",
+      "apiName": "Squirrel Fish"
+    },
+    {
+      "shopName": "Stone Harbor Delicacies",
+      "apiName": "Stone Harbor Delicacies"
+    },
+    {
+      "shopName": "Stuffed Tofu with Minced Meat",
+      "apiName": "Stuffed Tofu with Minced Meat"
+    },
+    {
+      "shopName": "Sweet Shrimp Sushi",
+      "apiName": "Sweet Shrimp Sushi"
+    },
+    {
+      "shopName": "Tahchin",
+      "apiName": "Tahchin"
+    },
+    {
+      "shopName": "Taiyaki",
+      "apiName": "Taiyaki"
+    },
+    {
+      "shopName": "Tatacos",
+      "apiName": "Tatacos"
+    },
+    {
+      "shopName": "Tea Break Pancake",
+      "apiName": "Tea Break Pancake"
+    },
+    {
+      "shopName": "Teyvat Fried Egg",
+      "apiName": "Teyvat Fried Egg"
+    },
+    {
+      "shopName": "Tomates Narbonnaises",
+      "apiName": "Tomates Narbonnaises"
+    },
+    {
+      "shopName": "Tonkotsu Ramen",
+      "apiName": "Tonkotsu Ramen"
+    },
+    {
+      "shopName": "Tricolor Dango",
+      "apiName": "Tricolor Dango"
+    },
+    {
+      "shopName": "Tripes du Port",
+      "apiName": "Tripes du Port"
+    },
+    {
+      "shopName": "Tulumba",
+      "apiName": "Tulumba"
+    },
+    {
+      "shopName": "Tuna Sushi",
+      "apiName": "Tuna Sushi"
+    },
+    {
+      "shopName": "Udon Noodles",
+      "apiName": "Udon Noodles"
+    },
+    {
+      "shopName": "Unagi Chazuke",
+      "apiName": "Unagi Chazuke"
+    },
+    {
+      "shopName": "Universal Peace",
+      "apiName": "Universal Peace"
+    },
+    {
+      "shopName": "Wakatakeni",
+      "apiName": "Wakatakeni"
+    },
+    {
+      "shopName": "Xocoatl",
+      "apiName": "Xocoatl"
+    },
+    {
+      "shopName": "Zharkoye",
+      "apiName": "Zharkoye"
+    }
+  ],
+  "onlyInShop": [
+    {
+      "shopName": "Apple Cider",
+      "suggestions": []
+    },
+    {
+      "shopName": "Berry & Mint Burst",
+      "suggestions": []
+    },
+    {
+      "shopName": "Birch Steamed Pork Ribs",
+      "suggestions": [
+        {
+          "name": "Birch-Steamed Pork Ribs",
+          "score": 0.957
+        }
+      ]
+    },
+    {
+      "shopName": "Black Back Perch Stew",
+      "suggestions": [
+        {
+          "name": "Black-Back Perch Stew",
+          "score": 0.952
+        }
+      ]
+    },
+    {
+      "shopName": "Charcoal Baked Ajilenakh Cake",
+      "suggestions": [
+        {
+          "name": "Charcoal-Baked Ajilenakh Cake",
+          "score": 0.966
+        }
+      ]
+    },
+    {
+      "shopName": "Chicken Mushroom Skewer",
+      "suggestions": [
+        {
+          "name": "Chicken-Mushroom Skewer",
+          "score": 0.957
+        },
+        {
+          "name": "Cheesy Mushroom Skewer",
+          "score": 0.783
+        }
+      ]
+    },
+    {
+      "shopName": "Deep Fried Doublecrisp",
+      "suggestions": [
+        {
+          "name": "Deep-Fried Doublecrisp",
+          "score": 0.955
+        }
+      ]
+    },
+    {
+      "shopName": "Fonta",
+      "suggestions": []
+    },
+    {
+      "shopName": "Fonta",
+      "suggestions": []
+    },
+    {
+      "shopName": "Frontier Land",
+      "suggestions": []
+    },
+    {
+      "shopName": "Glacial Starbrew",
+      "suggestions": []
+    },
+    {
+      "shopName": "Kvass",
+      "suggestions": []
+    },
+    {
+      "shopName": "Meat Filled Rye Bun",
+      "suggestions": [
+        {
+          "name": "Meat-Filled Rye Bun",
+          "score": 0.947
+        }
+      ]
+    },
+    {
+      "shopName": "More and More",
+      "suggestions": [
+        {
+          "name": "More-and-More",
+          "score": 0.846
+        }
+      ]
+    },
+    {
+      "shopName": "Nod Krai Hot Dog",
+      "suggestions": [
+        {
+          "name": "Nod-Krai Hot Dog",
+          "score": 0.938
+        }
+      ]
+    },
+    {
+      "shopName": "Piramida Nightingale",
+      "suggestions": []
+    },
+    {
+      "shopName": "Pop's Teas",
+      "suggestions": []
+    },
+    {
+      "shopName": "Pop's Teas",
+      "suggestions": []
+    },
+    {
+      "shopName": "Sparkling Berry Juice",
+      "suggestions": []
+    },
+    {
+      "shopName": "Special Mushroom Pizza",
+      "suggestions": []
+    },
+    {
+      "shopName": "Spiced Honey Brew",
+      "suggestions": []
+    },
+    {
+      "shopName": "Stir Fried Filet",
+      "suggestions": [
+        {
+          "name": "Stir-Fried Filet",
+          "score": 0.938
+        }
+      ]
+    },
+    {
+      "shopName": "Stir Fried Filet",
+      "suggestions": [
+        {
+          "name": "Stir-Fried Filet",
+          "score": 0.938
+        }
+      ]
+    },
+    {
+      "shopName": "Stir Fried Fish Noodles",
+      "suggestions": [
+        {
+          "name": "Stir-Fried Fish Noodles",
+          "score": 0.957
+        }
+      ]
+    },
+    {
+      "shopName": "Tea Smoked Squab",
+      "suggestions": [
+        {
+          "name": "Tea-Smoked Squab",
+          "score": 0.938
+        }
+      ]
+    },
+    {
+      "shopName": "Tri Flavored Skewer",
+      "suggestions": [
+        {
+          "name": "Tri-Flavored Skewer",
+          "score": 0.947
+        }
+      ]
+    },
+    {
+      "shopName": "Triple Layered Consomme",
+      "suggestions": [
+        {
+          "name": "Triple-Layered Consommé",
+          "score": 0.913
+        }
+      ]
+    },
+    {
+      "shopName": "Wildberry Trail",
+      "suggestions": []
+    },
+    {
+      "shopName": "Wolfhook Juice",
+      "suggestions": []
+    }
+  ],
+  "onlyInApi": [
+    {
+      "apiName": "A Buoyant Breeze",
+      "suggestions": []
+    },
+    {
+      "apiName": "\"Abyssal Bounty\"",
+      "suggestions": []
+    },
+    {
+      "apiName": "Adeptus' Temptation",
+      "suggestions": []
+    },
+    {
+      "apiName": "Adventurer's Breakfast Sandwich",
+      "suggestions": []
+    },
+    {
+      "apiName": "A Fragrant Feast of Flavors",
+      "suggestions": []
+    },
+    {
+      "apiName": "\"After-Class Practice\"",
+      "suggestions": []
+    },
+    {
+      "apiName": "A Leisurely Sip",
+      "suggestions": []
+    },
+    {
+      "apiName": "All-Delicacy Parcels",
+      "suggestions": []
+    },
+    {
+      "apiName": "All-Weather Beauty",
+      "suggestions": []
+    },
+    {
+      "apiName": "Apple Stew (Trial Version)",
+      "suggestions": []
+    },
+    {
+      "apiName": "A Prize Catch",
+      "suggestions": []
+    },
+    {
+      "apiName": "A Stunning Stratagem",
+      "suggestions": []
+    },
+    {
+      "apiName": "Bamboo Shoot Soup",
+      "suggestions": []
+    },
+    {
+      "apiName": "Barbatos Ratatouille",
+      "suggestions": []
+    },
+    {
+      "apiName": "Barbeque Ribs",
+      "suggestions": []
+    },
+    {
+      "apiName": "BBQ Beef Heart Skewers",
+      "suggestions": []
+    },
+    {
+      "apiName": "Birch-Steamed Pork Ribs",
+      "suggestions": [
+        {
+          "name": "Birch Steamed Pork Ribs",
+          "score": 0.957
+        }
+      ]
+    },
+    {
+      "apiName": "Black-Back Perch Stew",
+      "suggestions": [
+        {
+          "name": "Black Back Perch Stew",
+          "score": 0.952
+        }
+      ]
+    },
+    {
+      "apiName": "Blubbercream",
+      "suggestions": []
+    },
+    {
+      "apiName": "Borderland Crispbread",
+      "suggestions": []
+    },
+    {
+      "apiName": "Boredom-Busting Bubblegum",
+      "suggestions": []
+    },
+    {
+      "apiName": "Bountiful Year",
+      "suggestions": []
+    },
+    {
+      "apiName": "Braised Meat",
+      "suggestions": [
+        {
+          "name": "Braised Meatball",
+          "score": 0.75
+        }
+      ]
+    },
+    {
+      "apiName": "Bubblemilk Pie",
+      "suggestions": []
+    },
+    {
+      "apiName": "Butter Chicken",
+      "suggestions": []
+    },
+    {
+      "apiName": "Butter Crab",
+      "suggestions": []
+    },
+    {
+      "apiName": "Candy Shells",
+      "suggestions": []
+    },
+    {
+      "apiName": "Caviar Blini",
+      "suggestions": []
+    },
+    {
+      "apiName": "Celestial Tea Crisp",
+      "suggestions": []
+    },
+    {
+      "apiName": "Charcoal-Baked Ajilenakh Cake",
+      "suggestions": [
+        {
+          "name": "Charcoal Baked Ajilenakh Cake",
+          "score": 0.966
+        }
+      ]
+    },
+    {
+      "apiName": "\"Chatter of Joyful Nights\"",
+      "suggestions": []
+    },
+    {
+      "apiName": "Cheesy Crab Hotpot",
+      "suggestions": []
+    },
+    {
+      "apiName": "Cheesy Mushroom Skewer",
+      "suggestions": [
+        {
+          "name": "Chicken Mushroom Skewer",
+          "score": 0.783
+        }
+      ]
+    },
+    {
+      "apiName": "Chicken Kitezhgrad",
+      "suggestions": []
+    },
+    {
+      "apiName": "Chicken-Mushroom Skewer",
+      "suggestions": [
+        {
+          "name": "Chicken Mushroom Skewer",
+          "score": 0.957
+        }
+      ]
+    },
+    {
+      "apiName": "Chicken Tofu Pudding",
+      "suggestions": []
+    },
+    {
+      "apiName": "Chili-Mince Cornbread Buns",
+      "suggestions": []
+    },
+    {
+      "apiName": "Chocolate",
+      "suggestions": []
+    },
+    {
+      "apiName": "Clink-Clank Confectionery Cup",
+      "suggestions": []
+    },
+    {
+      "apiName": "Cloud-Shrouded Jade",
+      "suggestions": []
+    },
+    {
+      "apiName": "Coffee Bavarois",
+      "suggestions": []
+    },
+    {
+      "apiName": "Cold Cut Platter",
+      "suggestions": []
+    },
+    {
+      "apiName": "Cold Noodles with Mountain Delicacies",
+      "suggestions": [
+        {
+          "name": "Noodles with Mountain Delicacies",
+          "score": 0.865
+        },
+        {
+          "name": "Noodles with Mountain Delicacies",
+          "score": 0.865
+        }
+      ]
+    },
+    {
+      "apiName": "\"Consommé Purete\"",
+      "suggestions": []
+    },
+    {
+      "apiName": "Crab, Ham & Veggie Bake",
+      "suggestions": []
+    },
+    {
+      "apiName": "Crab Roe Kourayaki",
+      "suggestions": []
+    },
+    {
+      "apiName": "Crisp Croissant Combo",
+      "suggestions": []
+    },
+    {
+      "apiName": "Crispy Spring Rolls",
+      "suggestions": []
+    },
+    {
+      "apiName": "Cubic Tricks",
+      "suggestions": []
+    },
+    {
+      "apiName": "Deep-Fried Doublecrisp",
+      "suggestions": [
+        {
+          "name": "Deep Fried Doublecrisp",
+          "score": 0.955
+        }
+      ]
+    },
+    {
+      "apiName": "Definitely Not Bar Food!",
+      "suggestions": []
+    },
+    {
+      "apiName": "Delights of Wondrous Wanderings",
+      "suggestions": []
+    },
+    {
+      "apiName": "Der Weisheit Letzter Schluss (Life)",
+      "suggestions": []
+    },
+    {
+      "apiName": "Dew-Dipped Shrimp",
+      "suggestions": []
+    },
+    {
+      "apiName": "Die Heilige Sinfonie",
+      "suggestions": []
+    },
+    {
+      "apiName": "Dinner of Judgment",
+      "suggestions": []
+    },
+    {
+      "apiName": "Dizziness-Be-Gone no Jutsu Version 2.0",
+      "suggestions": []
+    },
+    {
+      "apiName": "Dreams of Healing",
+      "suggestions": []
+    },
+    {
+      "apiName": "Drink 455",
+      "suggestions": []
+    },
+    {
+      "apiName": "Drunken Plums in Snow",
+      "suggestions": []
+    },
+    {
+      "apiName": "Duel Soul",
+      "suggestions": []
+    },
+    {
+      "apiName": "Eight-Treasure Duck",
+      "suggestions": []
+    },
+    {
+      "apiName": "\"Emergency Barricade\"",
+      "suggestions": []
+    },
+    {
+      "apiName": "Emotional Support",
+      "suggestions": []
+    },
+    {
+      "apiName": "Encompassing Gladness",
+      "suggestions": []
+    },
+    {
+      "apiName": "Energizing Bento",
+      "suggestions": []
+    },
+    {
+      "apiName": "\"Energy-Replenishing Meal\"",
+      "suggestions": []
+    },
+    {
+      "apiName": "Exclusive Scoop: Gourmet Column",
+      "suggestions": []
+    },
+    {
+      "apiName": "Extravagant Slumber",
+      "suggestions": []
+    },
+    {
+      "apiName": "Faith Eternal",
+      "suggestions": []
+    },
+    {
+      "apiName": "\"Fashion Show\"",
+      "suggestions": []
+    },
+    {
+      "apiName": "Fireside Merriment",
+      "suggestions": []
+    },
+    {
+      "apiName": "Fish-Flavored Toast",
+      "suggestions": []
+    },
+    {
+      "apiName": "Fish With Cream Sauce",
+      "suggestions": []
+    },
+    {
+      "apiName": "Flash-Fried Filet",
+      "suggestions": []
+    },
+    {
+      "apiName": "Flavor of Spring",
+      "suggestions": []
+    },
+    {
+      "apiName": "Fontinalia Mousse",
+      "suggestions": []
+    },
+    {
+      "apiName": "Forest of Color",
+      "suggestions": []
+    },
+    {
+      "apiName": "Forest Watcher's Choice",
+      "suggestions": []
+    },
+    {
+      "apiName": "Fragrant Mashed Potatoes",
+      "suggestions": []
+    },
+    {
+      "apiName": "Fried Radish Balls",
+      "suggestions": []
+    },
+    {
+      "apiName": "Fried Shrimp Beanballs",
+      "suggestions": []
+    },
+    {
+      "apiName": "Fruit-Flavored Milk Candies",
+      "suggestions": []
+    },
+    {
+      "apiName": "Fruits Aplenty",
+      "suggestions": []
+    },
+    {
+      "apiName": "Fruity Duet",
+      "suggestions": []
+    },
+    {
+      "apiName": "Fruity Skewers",
+      "suggestions": []
+    },
+    {
+      "apiName": "Fruity Smoothie",
+      "suggestions": []
+    },
+    {
+      "apiName": "Fruity Trio",
+      "suggestions": []
+    },
+    {
+      "apiName": "Fukuuchi Udon",
+      "suggestions": []
+    },
+    {
+      "apiName": "Gateau Debord: Magnifique",
+      "suggestions": []
+    },
+    {
+      "apiName": "Gentle Sea Breeze",
+      "suggestions": []
+    },
+    {
+      "apiName": "Ghostly March",
+      "suggestions": []
+    },
+    {
+      "apiName": "Gilded Chest",
+      "suggestions": []
+    },
+    {
+      "apiName": "Glittering Gemstones",
+      "suggestions": []
+    },
+    {
+      "apiName": "Golden Apple Pastry",
+      "suggestions": []
+    },
+    {
+      "apiName": "Golden Chicken Burger",
+      "suggestions": []
+    },
+    {
+      "apiName": "Golden Fried Chicken",
+      "suggestions": []
+    },
+    {
+      "apiName": "Golden-Tempered Jade",
+      "suggestions": []
+    },
+    {
+      "apiName": "Goldflame Tajine",
+      "suggestions": []
+    },
+    {
+      "apiName": "Gold-Standard Healthy Meal",
+      "suggestions": []
+    },
+    {
+      "apiName": "Goulash",
+      "suggestions": []
+    },
+    {
+      "apiName": "Grainfruit Chips",
+      "suggestions": []
+    },
+    {
+      "apiName": "Grainfruit Wrap",
+      "suggestions": []
+    },
+    {
+      "apiName": "Grilled Fish in Mint Sauce",
+      "suggestions": []
+    },
+    {
+      "apiName": "Guhua Fish & Lamb Soup",
+      "suggestions": []
+    },
+    {
+      "apiName": "Haggis",
+      "suggestions": []
+    },
+    {
+      "apiName": "Halvamazd",
+      "suggestions": []
+    },
+    {
+      "apiName": "Harbor Fish Burger",
+      "suggestions": []
+    },
+    {
+      "apiName": "Harvest's Boon",
+      "suggestions": []
+    },
+    {
+      "apiName": "Hearthfire's Trail",
+      "suggestions": []
+    },
+    {
+      "apiName": "Heartstring Noodles",
+      "suggestions": []
+    },
+    {
+      "apiName": "Hearty Indulgence",
+      "suggestions": []
+    },
+    {
+      "apiName": "Heat-Quelling Soup",
+      "suggestions": []
+    },
+    {
+      "apiName": "Hoarfrost Soup",
+      "suggestions": []
+    },
+    {
+      "apiName": "Honey-Glazed Ceviche",
+      "suggestions": []
+    },
+    {
+      "apiName": "Hot Spring O'Clock",
+      "suggestions": []
+    },
+    {
+      "apiName": "Humbly Enough",
+      "suggestions": []
+    },
+    {
+      "apiName": "Hymn of Gathered Flame",
+      "suggestions": []
+    },
+    {
+      "apiName": "Ideal Circumstance",
+      "suggestions": []
+    },
+    {
+      "apiName": "Impeccably Organized",
+      "suggestions": []
+    },
+    {
+      "apiName": "Imported Poultry",
+      "suggestions": []
+    },
+    {
+      "apiName": "Invigorating Kitty Meal",
+      "suggestions": []
+    },
+    {
+      "apiName": "Invigorating Pizza",
+      "suggestions": []
+    },
+    {
+      "apiName": "Iridescence Under the Tree's Shade",
+      "suggestions": []
+    },
+    {
+      "apiName": "Iridescent Aria",
+      "suggestions": []
+    },
+    {
+      "apiName": "Jade-Cut Flowers",
+      "suggestions": []
+    },
+    {
+      "apiName": "Jade Fruit Soup",
+      "suggestions": []
+    },
+    {
+      "apiName": "Jade Parcels",
+      "suggestions": []
+    },
+    {
+      "apiName": "Jewelry Soup",
+      "suggestions": []
+    },
+    {
+      "apiName": "Jueyun Guoba",
+      "suggestions": []
+    },
+    {
+      "apiName": "Konda Cuisine",
+      "suggestions": []
+    },
+    {
+      "apiName": "Lakeside Snow Swan",
+      "suggestions": []
+    },
+    {
+      "apiName": "Lakkaberry Krumkakes",
+      "suggestions": []
+    },
+    {
+      "apiName": "Lighter-Than-Air Pancake",
+      "suggestions": []
+    },
+    {
+      "apiName": "Long Night Alight",
+      "suggestions": []
+    },
+    {
+      "apiName": "Lotus Flower Crisp",
+      "suggestions": []
+    },
+    {
+      "apiName": "Lotus Seed and Bird Egg Soup",
+      "suggestions": []
+    },
+    {
+      "apiName": "Lucky Snow Delight",
+      "suggestions": []
+    },
+    {
+      "apiName": "Magma Eggs",
+      "suggestions": []
+    },
+    {
+      "apiName": "Meat-Filled Rye Bun",
+      "suggestions": [
+        {
+          "name": "Meat Filled Rye Bun",
+          "score": 0.947
+        }
+      ]
+    },
+    {
+      "apiName": "Meat-Lover's Feast",
+      "suggestions": []
+    },
+    {
+      "apiName": "Meat Lovers' Mushroom Pizza",
+      "suggestions": []
+    },
+    {
+      "apiName": "Mega-Meaty Sushi",
+      "suggestions": []
+    },
+    {
+      "apiName": "Milky Mushroom Crisp Tower",
+      "suggestions": []
+    },
+    {
+      "apiName": "Millhaven's Morning Plate",
+      "suggestions": []
+    },
+    {
+      "apiName": "Mini Asha Pockets",
+      "suggestions": []
+    },
+    {
+      "apiName": "Mint Bubblegum",
+      "suggestions": []
+    },
+    {
+      "apiName": "Minty Fruit Tea",
+      "suggestions": []
+    },
+    {
+      "apiName": "Moment of Respite",
+      "suggestions": []
+    },
+    {
+      "apiName": "Mondstadt Grilled Fish",
+      "suggestions": []
+    },
+    {
+      "apiName": "Mondstadt Hash Brown",
+      "suggestions": []
+    },
+    {
+      "apiName": "Moonlit Mirage",
+      "suggestions": []
+    },
+    {
+      "apiName": "Moon Pie",
+      "suggestions": []
+    },
+    {
+      "apiName": "More-and-More",
+      "suggestions": [
+        {
+          "name": "More and More",
+          "score": 0.846
+        }
+      ]
+    },
+    {
+      "apiName": "Mt. Mushroom (For One)",
+      "suggestions": []
+    },
+    {
+      "apiName": "Mushroom Phantasm",
+      "suggestions": []
+    },
+    {
+      "apiName": "Mysterious Bolognese",
+      "suggestions": []
+    },
+    {
+      "apiName": "Mystique Soup",
+      "suggestions": []
+    },
+    {
+      "apiName": "\"My Way\"",
+      "suggestions": []
+    },
+    {
+      "apiName": "Nanas Cake",
+      "suggestions": []
+    },
+    {
+      "apiName": "Nightwatch Soup",
+      "suggestions": []
+    },
+    {
+      "apiName": "Nine-Fruit Nectar",
+      "suggestions": []
+    },
+    {
+      "apiName": "Nod-Krai Hot Dog",
+      "suggestions": [
+        {
+          "name": "Nod Krai Hot Dog",
+          "score": 0.938
+        }
+      ]
+    },
+    {
+      "apiName": "Northern Apple Stew",
+      "suggestions": []
+    },
+    {
+      "apiName": "Northern Smoked Chicken",
+      "suggestions": []
+    },
+    {
+      "apiName": "No Tomorrow",
+      "suggestions": []
+    },
+    {
+      "apiName": "Nutritious Meal (V.593)",
+      "suggestions": []
+    },
+    {
+      "apiName": "Omurice Waltz",
+      "suggestions": []
+    },
+    {
+      "apiName": "\"Once Upon a Time in Mondstadt\"",
+      "suggestions": []
+    },
+    {
+      "apiName": "Oncidium Tofu",
+      "suggestions": []
+    },
+    {
+      "apiName": "Onigiri",
+      "suggestions": []
+    },
+    {
+      "apiName": "Outrider's Champion Steak!",
+      "suggestions": []
+    },
+    {
+      "apiName": "Pass the Luck",
+      "suggestions": []
+    },
+    {
+      "apiName": "Petit Gateau Debord: Revised Version",
+      "suggestions": []
+    },
+    {
+      "apiName": "\"Pick What You Like!\"",
+      "suggestions": []
+    },
+    {
+      "apiName": "Poissonchant Pie",
+      "suggestions": []
+    },
+    {
+      "apiName": "\"Pour la Justice\"",
+      "suggestions": []
+    },
+    {
+      "apiName": "Prosperous Peace",
+      "suggestions": []
+    },
+    {
+      "apiName": "Puffed Grainfruit Bars",
+      "suggestions": []
+    },
+    {
+      "apiName": "Puff Pops",
+      "suggestions": []
+    },
+    {
+      "apiName": "Puppy-Paw Hash Brown",
+      "suggestions": []
+    },
+    {
+      "apiName": "Qiankun Mora Meat",
+      "suggestions": []
+    },
+    {
+      "apiName": "Qingce Household Dish",
+      "suggestions": []
+    },
+    {
+      "apiName": "Qingce Stir Fry",
+      "suggestions": []
+    },
+    {
+      "apiName": "Qingxin Flower Cake",
+      "suggestions": []
+    },
+    {
+      "apiName": "Quiet Elegance",
+      "suggestions": []
+    },
+    {
+      "apiName": "Radish Veggie Soup",
+      "suggestions": []
+    },
+    {
+      "apiName": "Rainbow Aster",
+      "suggestions": []
+    },
+    {
+      "apiName": "Rice Pudding",
+      "suggestions": []
+    },
+    {
+      "apiName": "Right at Home",
+      "suggestions": []
+    },
+    {
+      "apiName": "Rockin' Riffin' Chicken!",
+      "suggestions": []
+    },
+    {
+      "apiName": "Roulette Special",
+      "suggestions": []
+    },
+    {
+      "apiName": "Royal Grilled Fish",
+      "suggestions": []
+    },
+    {
+      "apiName": "Sakura Mochi",
+      "suggestions": []
+    },
+    {
+      "apiName": "Sakura Tempura",
+      "suggestions": []
+    },
+    {
+      "apiName": "Sashimi Platter",
+      "suggestions": []
+    },
+    {
+      "apiName": "Satiety Gel",
+      "suggestions": []
+    },
+    {
+      "apiName": "Satisfying Salad",
+      "suggestions": []
+    },
+    {
+      "apiName": "Saurian Hunter's Reward",
+      "suggestions": []
+    },
+    {
+      "apiName": "Saurus Crackers",
+      "suggestions": []
+    },
+    {
+      "apiName": "\"Seabird's Sojourn\"",
+      "suggestions": []
+    },
+    {
+      "apiName": "Secret Art",
+      "suggestions": []
+    },
+    {
+      "apiName": "Secret Sauce BBQ Ribs",
+      "suggestions": []
+    },
+    {
+      "apiName": "Secrets Exchanged",
+      "suggestions": []
+    },
+    {
+      "apiName": "Selva Salad",
+      "suggestions": []
+    },
+    {
+      "apiName": "Shimi Chazuke",
+      "suggestions": []
+    },
+    {
+      "apiName": "Show Me the Mora",
+      "suggestions": []
+    },
+    {
+      "apiName": "Shrimp Bisque",
+      "suggestions": []
+    },
+    {
+      "apiName": "Sing Your Heart Out",
+      "suggestions": []
+    },
+    {
+      "apiName": "Sin: The Kind that Doesn't Need to be Dealt With",
+      "suggestions": []
+    },
+    {
+      "apiName": "Slow-Cooked Bamboo Shoot Soup",
+      "suggestions": []
+    },
+    {
+      "apiName": "Smoked Fish Steak",
+      "suggestions": []
+    },
+    {
+      "apiName": "\"Snow on the Hearth\"",
+      "suggestions": []
+    },
+    {
+      "apiName": "Snowrealm Okroshkas",
+      "suggestions": []
+    },
+    {
+      "apiName": "Snowy Nocturne",
+      "suggestions": []
+    },
+    {
+      "apiName": "Solyanka",
+      "suggestions": []
+    },
+    {
+      "apiName": "Sour Sauce Ceviche",
+      "suggestions": []
+    },
+    {
+      "apiName": "Spiced Fried Chicken",
+      "suggestions": []
+    },
+    {
+      "apiName": "Spicy Stew",
+      "suggestions": []
+    },
+    {
+      "apiName": "Spinning Special",
+      "suggestions": []
+    },
+    {
+      "apiName": "Steak",
+      "suggestions": []
+    },
+    {
+      "apiName": "Steak Tartare",
+      "suggestions": []
+    },
+    {
+      "apiName": "Sticky Honey Roast",
+      "suggestions": []
+    },
+    {
+      "apiName": "Stir-Fried Filet",
+      "suggestions": [
+        {
+          "name": "Stir Fried Filet",
+          "score": 0.938
+        },
+        {
+          "name": "Stir Fried Filet",
+          "score": 0.938
+        }
+      ]
+    },
+    {
+      "apiName": "Stir-Fried Fish Noodles",
+      "suggestions": [
+        {
+          "name": "Stir Fried Fish Noodles",
+          "score": 0.957
+        }
+      ]
+    },
+    {
+      "apiName": "Stir-Fried Shrimp",
+      "suggestions": []
+    },
+    {
+      "apiName": "Stormcrest Pie",
+      "suggestions": []
+    },
+    {
+      "apiName": "Stroganina",
+      "suggestions": []
+    },
+    {
+      "apiName": "Stuffed N' Mashed Potatoes",
+      "suggestions": []
+    },
+    {
+      "apiName": "Summer Festival Fish",
+      "suggestions": []
+    },
+    {
+      "apiName": "Sunset Berry Tea",
+      "suggestions": []
+    },
+    {
+      "apiName": "Sunshine Sprat",
+      "suggestions": []
+    },
+    {
+      "apiName": "Super-Dee-Duper Delicious Meat Roll",
+      "suggestions": []
+    },
+    {
+      "apiName": "Super Magnificent Pizza",
+      "suggestions": []
+    },
+    {
+      "apiName": "Surf, Turf, and Perch",
+      "suggestions": []
+    },
+    {
+      "apiName": "Surveyor's Breakfast Sandwich",
+      "suggestions": []
+    },
+    {
+      "apiName": "Survival Grilled Fish",
+      "suggestions": []
+    },
+    {
+      "apiName": "\"Sweet Dream\"",
+      "suggestions": []
+    },
+    {
+      "apiName": "Sweet Madame",
+      "suggestions": []
+    },
+    {
+      "apiName": "Sweet Scoops",
+      "suggestions": []
+    },
+    {
+      "apiName": "Swirling Steps",
+      "suggestions": []
+    },
+    {
+      "apiName": "\"Tagged and Bagged\"",
+      "suggestions": []
+    },
+    {
+      "apiName": "Tandoori Roast Chicken",
+      "suggestions": []
+    },
+    {
+      "apiName": "Tasses Ragout",
+      "suggestions": []
+    },
+    {
+      "apiName": "Tea Party Polyphony",
+      "suggestions": []
+    },
+    {
+      "apiName": "Tea-Smoked Squab",
+      "suggestions": [
+        {
+          "name": "Tea Smoked Squab",
+          "score": 0.938
+        }
+      ]
+    },
+    {
+      "apiName": "Teyvat Charred Egg",
+      "suggestions": [
+        {
+          "name": "Teyvat Fried Egg",
+          "score": 0.778
+        }
+      ]
+    },
+    {
+      "apiName": "The Bullseye Roast",
+      "suggestions": []
+    },
+    {
+      "apiName": "The Endeavor",
+      "suggestions": []
+    },
+    {
+      "apiName": "The Only Truth",
+      "suggestions": []
+    },
+    {
+      "apiName": "The Palace Jewels",
+      "suggestions": []
+    },
+    {
+      "apiName": "Thick-Cut Duelist's Burger",
+      "suggestions": []
+    },
+    {
+      "apiName": "Thunderclap Slash!",
+      "suggestions": []
+    },
+    {
+      "apiName": "Tianshu Meat",
+      "suggestions": []
+    },
+    {
+      "apiName": "Today's Boon",
+      "suggestions": []
+    },
+    {
+      "apiName": "Traditionally-Made Charcoal-Baked Ajilenakh Cake",
+      "suggestions": []
+    },
+    {
+      "apiName": "Trembling Strings and Rushing Reeds",
+      "suggestions": []
+    },
+    {
+      "apiName": "Tri-Flavored Skewer",
+      "suggestions": [
+        {
+          "name": "Tri Flavored Skewer",
+          "score": 0.947
+        }
+      ]
+    },
+    {
+      "apiName": "Triple-Layered Consommé",
+      "suggestions": [
+        {
+          "name": "Triple Layered Consomme",
+          "score": 0.913
+        }
+      ]
+    },
+    {
+      "apiName": "Trout Amandine",
+      "suggestions": []
+    },
+    {
+      "apiName": "Utmost Care",
+      "suggestions": []
+    },
+    {
+      "apiName": "Vegetarian Abalone",
+      "suggestions": []
+    },
+    {
+      "apiName": "Veggie Pot Soup",
+      "suggestions": []
+    },
+    {
+      "apiName": "Vessie Chicken",
+      "suggestions": []
+    },
+    {
+      "apiName": "Victorious Legend",
+      "suggestions": []
+    },
+    {
+      "apiName": "Volcano Cake",
+      "suggestions": []
+    },
+    {
+      "apiName": "Wanmin Restaurant's Boiled Fish",
+      "suggestions": []
+    },
+    {
+      "apiName": "\"Warmth\"",
+      "suggestions": []
+    },
+    {
+      "apiName": "Way of the Strong",
+      "suggestions": []
+    },
+    {
+      "apiName": "Well-Balanced Meal",
+      "suggestions": []
+    },
+    {
+      "apiName": "Whisper in the Woods",
+      "suggestions": []
+    },
+    {
+      "apiName": "Woodland Dream",
+      "suggestions": []
+    },
+    {
+      "apiName": "Yearning",
+      "suggestions": []
+    },
+    {
+      "apiName": "Yummy Yum Cha",
+      "suggestions": []
+    },
+    {
+      "apiName": "Zhongyuan Chop Suey",
+      "suggestions": []
+    }
+  ]
+}

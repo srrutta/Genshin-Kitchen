@@ -21,6 +21,9 @@ export default function DishModal({ dish, restaurant, qty, onAdd, onChange, onCl
           {restaurant.name} at {NATIONS[restaurant.nation].name}
           {restaurant.owner && <><br />Owner : {restaurant.owner}</>}
         </p>
+        {dish.genshin?.description && (
+          <p className="dish-modal-genshin-description">{dish.genshin.description}</p>
+        )}
         {ingredients.length > 0 && (
           <div className="ingredients">
             <strong> Ingredient </strong>

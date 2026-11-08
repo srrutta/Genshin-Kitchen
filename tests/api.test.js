@@ -44,6 +44,10 @@ describe('Express API', () => {
 
     const allMenuResponse = await fetch(`${baseUrl}/api/menu`);
     const { items } = await allMenuResponse.json();
+    const teyvatFriedEgg = items.find((item) => item.name === 'Teyvat Fried Egg');
+    expect(teyvatFriedEgg.genshin.description).toBeTruthy();
+    const unmatchedDish = items.find((item) => !item.genshin);
+    expect(unmatchedDish).toBeTruthy();
     const sakuraShrimpCrackers = items.find((item) => item.name === 'Sakura Shrimp Crackers');
     expect(sakuraShrimpCrackers.image).toBe('/images/Item_Sakura_Shrimp_Crackers.webp');
     const sakuraImageResponse = await fetch(`${baseUrl}${sakuraShrimpCrackers.image}`);

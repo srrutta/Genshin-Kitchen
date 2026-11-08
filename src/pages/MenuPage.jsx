@@ -90,6 +90,7 @@ export default function MenuPage({ onOpenRestaurant, initialCategory = 'all', in
               <span className="catalog-card-info">
                 <strong>{dish.name}</strong>
                 <small>{dish.restaurantName} · {NATIONS[dish.nation]?.name ?? dish.nation}</small>
+                {dish.genshin?.description && <small className="dish-genshin-description">{dish.genshin.description}</small>}
                 <span>{Number(dish.price).toLocaleString()} Mora</span>
               </span>
             </button>
